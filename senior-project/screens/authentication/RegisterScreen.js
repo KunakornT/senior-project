@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button, Alert, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Card from '../../components/Card';
@@ -30,11 +30,11 @@ const RegisterScreen = props => {
   };
 
   const registerHandler = () => {
-    if( username.trim() === '' || password.trim() === '' || email.trim === '' ){
+    if (username.trim() === '' || password.trim() === '' || email.trim === '') {
       Alert.alert(
-        'Invalid Input', 
-        'Must specific all fields', 
-        [{ text: 'OK', style: 'destructive', onPress: resetInputHandler}]
+        'Invalid Input',
+        'Must specific all fields',
+        [{ text: 'OK', style: 'destructive', onPress: resetInputHandler }]
       );
       return;
     }
@@ -50,53 +50,57 @@ const RegisterScreen = props => {
         "email": email
       }),
     })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      return responseJson;
-    })
-    .catch(error => {
-      return error;
-    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        return responseJson;
+      })
+      .catch(error => {
+        return error;
+      })
   };
 
   return (
-    <View style={styles.screen}>
-      <Card>
-        <View style={styles.inputWrapper}>
-          <View style={styles.titleContainer}>
-            <MaterialCommunityIcons name='account-box-outline' size={25} />
-            <Text style={styles.text}>Username: </Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView style={styles.screen} behavior='padding' enabled>
+        <View >
+          <Card>
+            <View style={styles.inputWrapper}>
+              <View style={styles.titleContainer}>
+                <MaterialCommunityIcons name='account-box-outline' size={25} />
+                <Text style={styles.text}>Username: </Text>
+              </View>
+              <TextInput
+                style={styles.text}
+                onChangeText={usernameHandler}
+                value={username} />
+            </View>
+            <View style={styles.inputWrapper}>
+              <View style={styles.titleContainer}>
+                <Ionicons name='md-key' size={25} />
+                <Text style={styles.text}>Password: </Text>
+              </View>
+              <TextInput
+                style={styles.text}
+                onChangeText={passwordHandler}
+                value={password} />
+            </View>
+            <View style={styles.inputWrapper}>
+              <View style={styles.titleContainer}>
+                <MaterialCommunityIcons name='email-outline' size={25} />
+                <Text style={styles.text}>Email: </Text>
+              </View>
+              <TextInput
+                style={styles.text}
+                onChangeText={emailHandler}
+                value={email} />
+            </View>
+          </Card>
+          <View style={styles.buttonContainer}>
+            <Button title='Register' onPress={registerHandler} />
           </View>
-          <TextInput
-            style={styles.text}
-            onChangeText={usernameHandler}
-            value={username} />
         </View>
-        <View style={styles.inputWrapper}>
-          <View style={styles.titleContainer}>
-            <Ionicons name='md-key' size={25} />
-            <Text style={styles.text}>Password: </Text>
-          </View>
-          <TextInput
-            style={styles.text}
-            onChangeText={passwordHandler}
-            value={password} />
-        </View>
-        <View style={styles.inputWrapper}>
-          <View style={styles.titleContainer}>
-            <MaterialCommunityIcons name='email-outline' size={25} />
-            <Text style={styles.text}>Email: </Text>
-          </View>
-          <TextInput
-            style={styles.text}
-            onChangeText={emailHandler}
-            value={email} />
-        </View>
-      </Card>
-      <View style={styles.buttonContainer}>
-        <Button title='Register' onPress={registerHandler} />
-      </View>
-    </View>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
