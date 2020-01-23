@@ -1,4 +1,4 @@
 export default{
-  url_users: 'http://192.168.1.36:3000/users',
-  url_login: 'http://192.168.1.36:3000/login',
+  url_users: 'https://senior-project-server.herokuapp.com/users',
+  url_login: 'https://senior-project-server.herokuapp.com/login',
 }
