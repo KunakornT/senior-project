@@ -1,13 +1,71 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
+import url from '../../constants/url-constant';
 import Card from '../../components/Card';
 
 const LoginScreen = props => {
 
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const resetInputHandler = () => {
+    setUsername('');
+    setPassword('');
+  }
+
+  const usernameHandler = (textInput) => {
+    setUsername(textInput);
+  };
+
+  const passwordHandler = (textInput) => {
+    setPassword(textInput);
+  };
+
   const onPressLoginHandler = () => {
-    props.navigation.navigate('Home')
+    if (username.trim() === '' || password.trim() === '') {
+      Alert.alert(
+        'Invalid Input',
+        'Must specific all fields',
+        [{ text: 'OK', style: 'destructive', onPress: resetInputHandler }]
+      );
+      return;
+    }
+    else {
+      fetch(url.url_login, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "username": username,
+          "password": password
+        })
+      })
+        .then(response => {
+          const statusCode = response.status;
+          const data = response.message;
+          return Promise.all([statusCode, data]);
+        })
+        .then(([res, data]) => {
+          console.log(res, data);
+          if (res !== 200) {
+            Alert.alert(
+              'Invalid Input',
+              'Username or password are incorect',
+              [{ text: 'OK', style: 'destructive', onPress: resetInputHandler }]
+            );
+          }
+          else {
+            props.navigation.navigate('Home')
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        })
+    }
   };
 
   return (
@@ -19,14 +77,14 @@ const LoginScreen = props => {
               <MaterialCommunityIcons name='account-box-outline' size={25} />
               <Text style={styles.text}>Username: </Text>
             </View>
-            <TextInput style={styles.text} />
+            <TextInput style={styles.text} onChangeText={usernameHandler} value={username} />
           </View>
           <View style={styles.inputWrapper}>
             <View style={styles.titleContainer}>
               <Ionicons name='md-key' size={25} />
               <Text style={styles.text}>Password: </Text>
             </View>
-            <TextInput style={styles.text} />
+            <TextInput style={styles.text} onChangeText={passwordHandler} value={password} />
           </View>
         </Card>
         <View style={styles.buttonContainer}>

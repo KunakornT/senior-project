@@ -30,7 +30,7 @@ const RegisterScreen = props => {
   };
 
   const registerHandler = () => {
-    if (username.trim() === '' || password.trim() === '' || email.trim === '') {
+    if (username.trim() === '' || password.trim() === '' || email.trim() === '') {
       Alert.alert(
         'Invalid Input',
         'Must specific all fields',
@@ -38,25 +38,27 @@ const RegisterScreen = props => {
       );
       return;
     }
-    fetch(url.url_users, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "username": username,
-        "password": password,
-        "email": email
-      }),
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        return responseJson;
+    else {
+      fetch(url.url_users, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "username": username,
+          "password": password,
+          "email": email
+        }),
       })
-      .catch(error => {
-        return error;
-      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          return responseJson;
+        })
+        .catch(error => {
+          return error;
+        });
+    }
   };
 
   return (
