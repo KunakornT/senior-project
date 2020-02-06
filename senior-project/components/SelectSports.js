@@ -6,11 +6,11 @@ import {AntDesign} from '@expo/vector-icons';
 
 const SelectSports = ({navigation}) => {
   return <View style = {styles.backgroundStyle}>
-  <TouchableOpacity onPress = {() => navigation.navigate('Choose')}>
   <View>
+  <TouchableOpacity onPress = {() => navigation.navigate('Choose')}>
   <Ionicons name = "ios-football" size={80} style= {styles.iconstyle}/>
-  </View>
   </TouchableOpacity>
+  </View>
 
   </View>
 };

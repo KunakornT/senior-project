@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert, AsyncStorage } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import url from '../../constants/url-constant';
@@ -9,6 +9,18 @@ const LoginScreen = props => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  async function retrieveData() {
+    const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
+    console.log(isLoggedIn)
+    if(isLoggedIn === 'true'){
+      props.navigation.navigate('Home');
+    }
+  } 
+
+  useEffect(() => {
+    retrieveData();
+  })
 
   const resetInputHandler = () => {
     setUsername('');
@@ -46,7 +58,7 @@ const LoginScreen = props => {
       })
         .then(response => {
           const statusCode = response.status;
-          const data = response.message;
+          const data = response.json();
           return Promise.all([statusCode, data]);
         })
         .then(([res, data]) => {
@@ -54,12 +66,14 @@ const LoginScreen = props => {
           if (res !== 200) {
             Alert.alert(
               'Invalid Input',
-              'Username or password are incorect',
+              data.message,
               [{ text: 'OK', style: 'destructive', onPress: resetInputHandler }]
             );
           }
           else {
-            props.navigation.navigate('Home')
+            AsyncStorage.setItem('userInfo', JSON.stringify(data));
+            AsyncStorage.setItem('isLoggedIn', 'true');
+            props.navigation.navigate('Home');
           }
         })
         .catch(error => {
