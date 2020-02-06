@@ -16,8 +16,8 @@ const ProfileScreen = props => {
     fetchUserData();
   },[username])
 
-  const logoutHandler = () => {
-    AsyncStorage.clear();
+  const logoutHandler = async () => {
+    await AsyncStorage.clear();
     props.navigation.navigate('Auth');
   }
 
