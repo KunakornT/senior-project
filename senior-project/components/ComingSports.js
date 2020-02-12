@@ -1,7 +1,7 @@
 import React from 'react';
 import {View,Text,StyleSheet,Image} from 'react-native';
 
-const EventsNearby = ({imageSource,title}) => {
+const ComingSports = ({imageSource,title}) => {
   if(!imageSource){
     return null;
   }
@@ -30,4 +30,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default EventsNearby;
+export default ComingSports;

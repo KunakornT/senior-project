@@ -1,7 +1,7 @@
 import React from 'react';
 import {View,Text,StyleSheet} from 'react-native';
 
-const EventScreen = () => {
+const SportsFilter = () => {
   return <View style = {styles.backgroundStyle}>
   </View>
 };
@@ -22,4 +22,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default EventScreen;
+export default SportsFilter;
