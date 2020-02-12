@@ -5,26 +5,16 @@ import {withNavigation} from 'react-navigation';
 import {AntDesign} from '@expo/vector-icons';
 
 const SelectSports = ({navigation}) => {
-  return <View style = {styles.backgroundStyle}>
+  return (
+  <View >
   <TouchableOpacity onPress = {() => navigation.navigate('Choose')}>
-  <View>
-  <Ionicons name = "ios-football" size={80} style= {styles.iconstyle}/>
-  </View>
+  <Ionicons name = "ios-football" style= {styles.iconstyle}/>
   </TouchableOpacity>
-
   </View>
+)
 };
 
 const styles = StyleSheet.create({
-  backgroundStyle:{
-    height: 200,
-    backgroundColor: '#FFFCF7',
-    borderColor: 'black',
-    borderRadius: 15,
-    margin: 10,
-    borderWidth: 1,
-    marginTop: 15
-  },
   iconstyle:{
     marginLeft: 20,
     fontSize: 100

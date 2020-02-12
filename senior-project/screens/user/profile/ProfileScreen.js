@@ -1,36 +1,48 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, Button, TouchableOpacity, AsyncStorage } from 'react-native';
 
-
-async function fetchData() {
-  let response = await fetch('http://192.168.1.36:3000/users'+'/kunakorn@gmail.com');
-  let body = await response.json();
-  console.log(body)
-  return body;
-}
+import url from '../../../constants/url-constant';
 
 const ProfileScreen = props => {
 
+  const [username, setUsername] = useState(null)
 
-  const data = fetchData();
+  useEffect(() => {
+    async function fetchUserData() {
+      let data  = await AsyncStorage.getItem('userInfo');
+      let user = await JSON.parse(data);
+      setUsername(user.username);
+    }
+    fetchUserData();
+  },[username])
+
+  const logoutHandler = async () => {
+    await AsyncStorage.clear();
+    props.navigation.navigate('Auth');
+  }
 
   return (
     <View style={styles.screen}>
+      <Text style={styles.name}>{username}</Text>
       <View style={styles.imageContainer}>
         <TouchableOpacity >
           <Image style={styles.image} source={require('../../../assets/profile.jpeg')} />
         </TouchableOpacity>
       </View>
-      <Text></Text>
-      <Button title='Logout' onPress={() => props.navigation.navigate('Auth')} />
+      <Button title='Logout' onPress={logoutHandler} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: 'center'
+  },
+  name: {
+    marginVertical: 20,
+    fontSize: 22,
+    fontWeight: 'bold',
   },
   imageContainer: {
     marginVertical: 20,
