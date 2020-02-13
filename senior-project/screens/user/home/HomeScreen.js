@@ -1,4 +1,4 @@
-import React,  { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {View,Text,Image,StyleSheet,ScrollView,Button,TouchableOpacity,AsyncStorage} from 'react-native';
 import SelectSports from '../../../components/SelectSports';
 import EventsNearby from '../../../components/EventsNearby';
