@@ -9,10 +9,7 @@ import url from '../../constants/url-constant';
 
 const RegisterScreen = props => {
 
-  var today = new Date();
-  var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-
-  var radio_props = [
+  let radio_props = [
     { label: 'male', value: 'male' },
     { label: 'female', value: 'female' }
   ];
@@ -201,7 +198,7 @@ const RegisterScreen = props => {
                     mode='date'
                     onConfirm={dateConfirmHandler}
                     onCancel={hideDateHandler}
-                    maximumDate={today}
+                    maximumDate={new Date()}
                   />
                   <TextInput value={birthDate} editable={false} style={styles.text} />
                 </TouchableOpacity>

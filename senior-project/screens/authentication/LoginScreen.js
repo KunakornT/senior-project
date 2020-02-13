@@ -10,6 +10,7 @@ const LoginScreen = props => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+
   async function retrieveData() {
     const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
     if(isLoggedIn === 'true'){
