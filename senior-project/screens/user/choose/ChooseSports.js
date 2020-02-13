@@ -1,9 +1,11 @@
 import React,{useState,useEffect,useContext} from 'react';
-import { Text, View, StyleSheet, Dimensions, Button, ActivityIndicator,Image } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, Button, ActivityIndicator,Image, TextInput } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker,Permission,Circle } from 'react-native-maps';
 import {requestPermissionsAsync,watchPositionAsync,Accuracy} from 'expo-location';
 //import '../../_mockLocation';
 import {Context as LocationContext} from '../../../context/LocationContext';
+import { Ionicons } from '@expo/vector-icons';
+import Card from '../../../components/Card';
 
 const ChooseSports = ({navigation}) => {
 
@@ -33,13 +35,6 @@ const ChooseSports = ({navigation}) => {
   if(!currentLocation){
     return <ActivityIndicator size = "large" style={{marginTop:200}}/>;
   }
-
-import React from 'react';
-import { Text, View, StyleSheet, Dimensions, TextInput } from 'react-native';
-import MapView from 'react-native-maps';
-import { Ionicons } from '@expo/vector-icons';
-
-import Card from '../../../components/Card';
 
   return (
     <View style={styles.container}>
