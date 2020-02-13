@@ -1,16 +1,19 @@
 import React,{useState,useEffect,useContext} from 'react';
-import { Text, View, StyleSheet, Dimensions, Button, ActivityIndicator,Image, TextInput } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, Button, ActivityIndicator,Image, TextInput, Alert } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker,Permission,Circle } from 'react-native-maps';
 import {requestPermissionsAsync,watchPositionAsync,Accuracy} from 'expo-location';
 //import '../../_mockLocation';
 import {Context as LocationContext} from '../../../context/LocationContext';
 import { Ionicons } from '@expo/vector-icons';
+
 import Card from '../../../components/Card';
+import url from '../../../constants/url-constant';
 
 const ChooseSports = ({navigation}) => {
 
   const {addLocation} = useContext(LocationContext);
   const [err,setErr] = useState(null);
+
   const startWatching = async () => {
     try{
       await requestPermissionsAsync();
@@ -26,8 +29,24 @@ const ChooseSports = ({navigation}) => {
       setErr(e);
     }
   };
+  const fetchSportField = async () => {
+    const response = await fetch(url.url_sportsfield);
+    const data = await response.json();
+    if(response.status !== 200){
+      Alert.alert(
+        'Error',
+        data.message,
+        [{ text: 'OK', style: 'destructive'}]
+      )
+    }
+    else {
+      console.log(data);  //All sport field information
+      return;
+    }
+  }
 
   useEffect(() => {
+    fetchSportField();
     startWatching();
   },[]);
 
