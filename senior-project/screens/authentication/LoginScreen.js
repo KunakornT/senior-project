@@ -15,6 +15,8 @@ const LoginScreen = props => {
     if(isLoggedIn === 'true'){
       console.log(isLoggedIn)
       props.navigation.navigate('Home');
+    }else {
+      await AsyncStorage.clear();
     }
   } 
 
@@ -71,9 +73,15 @@ const LoginScreen = props => {
             );
           }
           else {
-            AsyncStorage.setItem('userInfo', JSON.stringify(data));
-            AsyncStorage.setItem('isLoggedIn', 'true');
-            props.navigation.navigate('Home');
+            if(data.authentication === false){
+              AsyncStorage.setItem('userInfo', JSON.stringify(data));
+              props.navigation.navigate('Verification');
+            }
+            else{
+              AsyncStorage.setItem('userInfo', JSON.stringify(data));
+              AsyncStorage.setItem('isLoggedIn', 'true');
+              props.navigation.navigate('Home');
+            }
           }
         })
         .catch(error => {

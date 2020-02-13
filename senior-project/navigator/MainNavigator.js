@@ -11,12 +11,14 @@ import NotificationScreen from '../screens/user/notification/NotificationScreen'
 import ProfileScreen from '../screens/user/profile/ProfileScreen';
 import EventScreen from '../screens/user/event/EventScreen';
 import RegisterScreen from '../screens/authentication/RegisterScreen';
+import VerificationConfirm from '../screens/authentication/VerificationConfirm';
 import ChooseSports from '../screens/user/choose/ChooseSports';
 import Colors from '../constants/Colors';
 
 const AuthStackNavigation = createStackNavigator({
   Login: LoginScreen,
   Register:  RegisterScreen,
+  Verification: VerificationConfirm
 });
 
 
