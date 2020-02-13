@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Button, AsyncStorage, TouchableOpacity } from 'react-native';
+import React,{ useState, useEffect } from 'react';
+import {View,Text,Image,StyleSheet,ScrollView,Button,TouchableOpacity,AsyncStorage} from 'react-native';
 import SelectSports from '../../../components/SelectSports';
 import EventsNearby from '../../../components/EventsNearby';
-import { Ionicons } from '@expo/vector-icons';
+import {Ionicons} from '@expo/vector-icons';
+import url from '../../../constants/url-constant';
+
 
 const HomeScreen = ({ navigation }) => {
 
