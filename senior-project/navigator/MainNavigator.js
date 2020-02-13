@@ -4,7 +4,6 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
-
 import LoginScreen from '../screens/authentication/LoginScreen';
 import HomeScreen from '../screens/user/home/HomeScreen';
 import NotificationScreen from '../screens/user/notification/NotificationScreen';
@@ -13,10 +12,12 @@ import EventScreen from '../screens/user/event/EventScreen';
 import RegisterScreen from '../screens/authentication/RegisterScreen';
 import ChooseSports from '../screens/user/choose/ChooseSports';
 import Colors from '../constants/Colors';
+import SportsField from '../screens/user/choose/screens/SportsField';
+import {Provider as LocationProvider} from '../context/LocationContext';
 
 const AuthStackNavigation = createStackNavigator({
   Login: LoginScreen,
-  Register:  RegisterScreen,
+  Register:  RegisterScreen
 });
 
 
@@ -32,7 +33,8 @@ const defaultStackNavOption = {
 
 const HomeStackNavigation = createStackNavigator({
   Home: HomeScreen,
-  Choose: ChooseSports
+  Choose: ChooseSports,
+  Field: SportsField
 },
 {
   defaultNavigationOptions: defaultStackNavOption
@@ -111,4 +113,11 @@ const AppNavigator = createSwitchNavigator({
   Home: MainTabNavigation,
 });
 
-export default createAppContainer(AppNavigator);
+const App = createAppContainer(AppNavigator);
+export default() => {
+  return(
+    <LocationProvider>
+    <App />
+    </LocationProvider>
+  );
+};
