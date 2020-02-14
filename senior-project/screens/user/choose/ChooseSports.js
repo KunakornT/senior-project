@@ -81,12 +81,12 @@ const ChooseSports = ({ navigation }) => {
           <TextInput style={styles.text} />
         </View>
       </Card>
-      {(sportField !== null) && 
+      {/* {(sportField !== null) && 
       <FlatList 
         data={sportField}
         keyExtractor={(item) => item.sport_field_id.toString()}
-        renderItem={({item}) => <Text>{item.sport_field_name}</Text>} />}
-      {/* <MapView style={styles.mapStyle}
+        renderItem={({item}) => <Text>{item.sport_field_name}</Text>} />} */}
+      <MapView style={styles.mapStyle}
         provider={PROVIDER_GOOGLE}
         showUserLocation={true}
         initialRegion={{
@@ -100,22 +100,22 @@ const ChooseSports = ({ navigation }) => {
           longitudeDelta: 0.005
         }}
       >
-        <Marker
-          title={'Futsal Park Rama II'}
-          coordinate={{
-            latitude: 13.658213,
-            longitude: 100.469405
-          }}
-          description={"Football Field"}>
-
-          <Image source={require('../../../assets/football.png')} style={{ height: 35, width: 35 }} />
-        </Marker>
+        {sportField !== null && sportField.map(field => (
+          <MapView.Marker
+            key={field.sport_field_id}
+            title={field.sport_field_name}
+            coordinate={{
+              latitude: field.latitude,
+              longitude: field.longtitude
+            }}
+            />
+        ))}
 
         <Marker
           coordinate={currentLocation.coords}>
           <Image style={styles.imageContainer} source={require('../../../assets/profile.jpeg')} />
         </Marker>
-      </MapView> */}
+      </MapView>
     </View>);
 };
 
