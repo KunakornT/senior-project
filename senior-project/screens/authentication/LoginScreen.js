@@ -19,7 +19,7 @@ const LoginScreen = props => {
     }else {
       await AsyncStorage.clear();
     }
-  } 
+  }
 
   useEffect(() => {
     retrieveData();

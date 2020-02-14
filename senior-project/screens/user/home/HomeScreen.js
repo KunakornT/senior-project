@@ -41,6 +41,10 @@ const HomeScreen = ({ navigation }) => {
         <EventsNearby
           title="Chris basketball"
           imageSource={require('../../../assets/basketball.jpg')} />
+          <Button
+          title = "Go to Component Demo"
+          onPress = {() => navigation.navigate('Field')}
+          />
       </ScrollView>
     </View>
   )
