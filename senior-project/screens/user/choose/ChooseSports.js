@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Card from '../../../components/Card';
 import url from '../../../constants/url-constant';
 import sport from '../../../components/api/data';
+
 const ChooseSports = ({ navigation }) => {
   const [data, setData] = useState('');
   const [field, setField] = useState('');
@@ -81,43 +82,53 @@ const ChooseSports = ({ navigation }) => {
           <TextInput style={styles.text} />
         </View>
       </Card>
-      {(sportField !== null) && 
-      <FlatList 
+      {(sportField !== null) &&
+      <FlatList
         data={sportField}
         keyExtractor={(item) => item.sport_field_id.toString()}
-        renderItem={({item}) => <Text>{item.sport_field_name}</Text>} />}
-      {/* <MapView style={styles.mapStyle}
-        provider={PROVIDER_GOOGLE}
-        showUserLocation={true}
-        initialRegion={{
-          ...currentLocation.coords,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005
-        }}
-        region={{
-          ...currentLocation.coords,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005
-        }}
-      >
-        <Marker
-          title={'Futsal Park Rama II'}
-          coordinate={{
-            latitude: 13.658213,
-            longitude: 100.469405
-          }}
-          description={"Football Field"}>
+        renderItem={({item}) => {
+            return (
+              <View>
+              <MapView style={styles.mapStyle}
+               provider={PROVIDER_GOOGLE}
+               showUserLocation={true}
+               initialRegion={{
+                 ...currentLocation.coords,
+                 latitudeDelta: 0.005,
+                 longitudeDelta: 0.005
+               }}
+               region={{
+                 ...currentLocation.coords,
+                 latitudeDelta: 0.005,
+                 longitudeDelta: 0.005
+               }}
+             >
 
-          <Image source={require('../../../assets/football.png')} style={{ height: 35, width: 35 }} />
-        </Marker>
+               <Marker
+                 title={item.sport_field_name}
+                 coordinate={{
+                   latitude: item.latitude,
+                   longitude: item.longtitude
+                 }}
 
-        <Marker
-          coordinate={currentLocation.coords}>
-          <Image style={styles.imageContainer} source={require('../../../assets/profile.jpeg')} />
-        </Marker>
-      </MapView> */}
-    </View>);
-};
+                 description={"Football Field"}>
+                   <Image source={require('../../../assets/football.png')} style={{ height: 35, width: 35 }} />
+               </Marker>
+
+               <Marker
+                 coordinate={currentLocation.coords}>
+                 <Image style={styles.imageContainer} source={require('../../../assets/profile.jpeg')} />
+               </Marker>
+             </MapView>
+              </View>
+            );
+          }
+
+
+        } />}
+      </View>
+    );
+  }
 
 const styles = StyleSheet.create({
   container: {
