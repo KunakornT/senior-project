@@ -130,6 +130,7 @@ const ChooseSports = ({ navigation }) => {
     );
   }
 
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
