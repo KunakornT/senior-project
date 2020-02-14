@@ -1,23 +1,24 @@
-import React,{useState,useEffect,useContext,Component} from 'react';
-import { Text, View, StyleSheet, Dimensions, Button, ActivityIndicator,Image, TextInput, Alert,AsyncStorage,FlatList } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker,Permission,Circle } from 'react-native-maps';
-import {requestPermissionsAsync,watchPositionAsync,Accuracy} from 'expo-location';
+import React, { useState, useEffect, useContext, Component } from 'react';
+import { Text, View, StyleSheet, Dimensions, Button, ActivityIndicator, Image, TextInput, Alert, AsyncStorage, FlatList } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, Marker, Permission, Circle } from 'react-native-maps';
+import { requestPermissionsAsync, watchPositionAsync, Accuracy } from 'expo-location';
 //import '../../_mockLocation';
-import {Context as LocationContext} from '../../../context/LocationContext';
+import { Context as LocationContext } from '../../../context/LocationContext';
 import { Ionicons } from '@expo/vector-icons';
 import Card from '../../../components/Card';
 import url from '../../../constants/url-constant';
 import sport from '../../../components/api/data';
-const ChooseSports = ({navigation}) => {
-  const [data,setData] = useState('');
-  const [field,setField] = useState('');
-  const [longtitude,setLongtitude] = useState('');
-  const [latitude,setLatitude] = useState('');
-  const {addLocation,getField} = useContext(LocationContext);
-  const [err,setErr] = useState(null);
+const ChooseSports = ({ navigation }) => {
+  const [data, setData] = useState('');
+  const [field, setField] = useState('');
+  const [longtitude, setLongtitude] = useState('');
+  const [latitude, setLatitude] = useState('');
+  const { addLocation, getField } = useContext(LocationContext);
+  const [err, setErr] = useState(null);
+  const [sportField, setSportField] = useState(null);
 
   const startWatching = async () => {
-    try{
+    try {
       await requestPermissionsAsync();
       await watchPositionAsync({
         accuracy: Accuracy.BestForNavigation,
@@ -25,103 +26,103 @@ const ChooseSports = ({navigation}) => {
         distanceInterval: 10
       }, (location) => {
         addLocation(location);
-      //  console.log(location);
+        //  console.log(location);
       });
-    }catch (e){
+    } catch (e) {
       setErr(e);
     }
   };
 
-  const fetchSportField = async () =>{
-    console.log('Hi there!');
-    const response = await sport.get('/sport-field');
-    setField(response.data);
-  //  setLatitude(response.data.latitude);
-    console.log(field);
-    //console.log(latitude);
-  };
-
-/*  const fetchSportField = async () => {
-    const response = await fetch(url.url_sportsfield,{
-      method: 'GET'
-    });
-    const data = await response.json();
-    if(response.status !== 200){
-      Alert.alert(
-        'Error',
-        data.message,
-        [{ text: 'OK', style: 'destructive'}]
-      )
-    }
-    else {
-      console.log(data);
-      return data;
-    }
-    return;
-  }*/
-
+  // const fetchSportField = async () => {
+  //   console.log('Hi there!');
+  //   const response = await sport.get('/sport-field');
+  //   setField(response.data);
+  //    setLatitude(response.data.latitude);
+  //   console.log(field);
+  //   console.log(latitude);
+  // };
 
   useEffect(() => {
+    const fetchSportField = async () => {
+      const response = await fetch(url.url_sportsfield, {
+        method: 'GET'
+      });
+      const data = await response.json();
+      console.log(data)
+      if (!response.ok) {
+        Alert.alert(
+          'Error',
+          data.message,
+          [{ text: 'OK', style: 'destructive' }]
+        )
+        return;
+      }
+      setSportField(data);
+    }
     startWatching();
     fetchSportField();
-    const listener = navigation.addListener('didFocus',() => {
-        fetchSportField();
-      });
-      return () =>{
-        listener.remove();
-      };
-    },[]);
+    // const listener = navigation.addListener('didFocus', () => {
+    //   fetchSportField();
+    // });
+    // return () => {
+    //   listener.remove();
+    // };
+  }, []);
 
-  const {state: {currentLocation}} = useContext(LocationContext);
-  if(!currentLocation){
-    return <ActivityIndicator size = "large" style={{marginTop:200}}/>;
+  const { state: { currentLocation } } = useContext(LocationContext);
+  if (!currentLocation) {
+    return <ActivityIndicator size="large" style={{ marginTop: 200 }} />;
   }
   return (
     <View style={styles.container}>
-      <MapView style={styles.mapStyle}
-        provider={PROVIDER_GOOGLE}
-        showUserLocation={true}
-        initialRegion={{
-        ...currentLocation.coords,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.005
-      }}
-      region = {{
-        ...currentLocation.coords,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.005
-      }}
-      >
-
-     <Marker
-          title = {'Futsal Park Rama II'}
-            coordinate={{
-                latitude: 13.658213,
-                longitude: 100.469405
-            }}
-          description={"Football Field"}>
-
-       <Image source={require('../../../assets/football.png')} style={{height: 35, width:35 }} />
-       </Marker>
-
-    <Marker
-          coordinate={currentLocation.coords}>
-          <Image style = {styles.imageContainer} source={require('../../../assets/profile.jpeg')}/>
-      </Marker>
-    </MapView>
       <Card>
         <View style={styles.titleContainer}>
           <Ionicons name='ios-search' size={25} />
-          <TextInput style={styles.text}/>
+          <TextInput style={styles.text} />
         </View>
       </Card>
-      <MapView style={styles.mapStyle} />
+      {(sportField !== null) && 
+      <FlatList 
+        data={sportField}
+        keyExtractor={(item) => item.sport_field_id.toString()}
+        renderItem={({item}) => <Text>{item.sport_field_name}</Text>} />}
+      {/* <MapView style={styles.mapStyle}
+        provider={PROVIDER_GOOGLE}
+        showUserLocation={true}
+        initialRegion={{
+          ...currentLocation.coords,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005
+        }}
+        region={{
+          ...currentLocation.coords,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005
+        }}
+      >
+        <Marker
+          title={'Futsal Park Rama II'}
+          coordinate={{
+            latitude: 13.658213,
+            longitude: 100.469405
+          }}
+          description={"Football Field"}>
+
+          <Image source={require('../../../assets/football.png')} style={{ height: 35, width: 35 }} />
+        </Marker>
+
+        <Marker
+          coordinate={currentLocation.coords}>
+          <Image style={styles.imageContainer} source={require('../../../assets/profile.jpeg')} />
+        </Marker>
+      </MapView> */}
     </View>);
 };
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
+    flex: 1,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
-  headText:{
+  headText: {
     fontSize: 25,
     fontWeight: 'bold',
     alignSelf: 'center',
