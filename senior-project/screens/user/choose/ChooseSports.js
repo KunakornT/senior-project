@@ -8,7 +8,6 @@ import { Ionicons } from '@expo/vector-icons';
 import Card from '../../../components/Card';
 import url from '../../../constants/url-constant';
 import sport from '../../../components/api/data';
-
 const ChooseSports = ({ navigation }) => {
   const [data, setData] = useState('');
   const [field, setField] = useState('');
@@ -82,54 +81,39 @@ const ChooseSports = ({ navigation }) => {
           <TextInput style={styles.text} />
         </View>
       </Card>
-      {(sportField !== null) &&
-      <FlatList
-        data={sportField}
-        keyExtractor={(item) => item.sport_field_id.toString()}
-        renderItem={({item}) => {
-            return (
-              <View>
-              <MapView style={styles.mapStyle}
-               provider={PROVIDER_GOOGLE}
-               showUserLocation={true}
-               initialRegion={{
-                 ...currentLocation.coords,
-                 latitudeDelta: 0.005,
-                 longitudeDelta: 0.005
-               }}
-               region={{
-                 ...currentLocation.coords,
-                 latitudeDelta: 0.005,
-                 longitudeDelta: 0.005
-               }}
-             >
-
-               <Marker
-                 title={item.sport_field_name}
-                 coordinate={{
-                   latitude: item.latitude,
-                   longitude: item.longtitude
-                 }}
-
-                 description={"Football Field"}>
-                   <Image source={require('../../../assets/football.png')} style={{ height: 35, width: 35 }} />
-               </Marker>
-
-               <Marker
-                 coordinate={currentLocation.coords}>
-                 <Image style={styles.imageContainer} source={require('../../../assets/profile.jpeg')} />
-               </Marker>
-             </MapView>
-              </View>
-            );
-          }
-
-
-        } />}
-      </View>
-    );
-  }
-
+      <MapView style={styles.mapStyle}
+        provider={PROVIDER_GOOGLE}
+        showUserLocation={true}
+        initialRegion={{
+          ...currentLocation.coords,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005
+        }}
+        region={{
+          ...currentLocation.coords,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005
+        }}
+      >
+        {(sportField !== null) && sportField.map(field => (
+          <Marker
+            key={field.sport_field_id}
+            title={field.sport_field_name}
+            description={field.description}
+            coordinate={{
+              latitude: field.latitude,
+              longitude: field.longtitude
+            }}>
+            <Image style={styles.imageContainer} source={require('../../../assets/football.png')} />
+          </Marker>
+        ))}
+        <Marker
+          coordinate={currentLocation.coords}>
+          <Image style={styles.imageContainer} source={require('../../../assets/profile.jpeg')} />
+        </Marker>
+      </MapView>
+    </View>);
+};
 
 const styles = StyleSheet.create({
   container: {
