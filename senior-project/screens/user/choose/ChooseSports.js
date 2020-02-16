@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useContext, Component } from 'react';
-import { Text, View, StyleSheet, Dimensions, Button, ActivityIndicator, Image, TextInput, Alert, AsyncStorage, FlatList } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker, Permission, Circle } from 'react-native-maps';
+import { Text, View, StyleSheet, Dimensions, Button, ActivityIndicator, Image, TextInput, Alert, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, Marker, Permission, Callout } from 'react-native-maps';
 import { requestPermissionsAsync, watchPositionAsync, Accuracy } from 'expo-location';
 //import '../../_mockLocation';
 import { Context as LocationContext } from '../../../context/LocationContext';
 import { Ionicons } from '@expo/vector-icons';
 import Card from '../../../components/Card';
 import url from '../../../constants/url-constant';
-import sport from '../../../components/api/data';
+import SportsField from '../../../screens/user/choose/screens/SportsField';
+
 const ChooseSports = ({ navigation }) => {
   const [data, setData] = useState('');
   const [field, setField] = useState('');
@@ -32,15 +33,6 @@ const ChooseSports = ({ navigation }) => {
       setErr(e);
     }
   };
-
-  // const fetchSportField = async () => {
-  //   console.log('Hi there!');
-  //   const response = await sport.get('/sport-field');
-  //   setField(response.data);
-  //    setLatitude(response.data.latitude);
-  //   console.log(field);
-  //   console.log(latitude);
-  // };
 
   useEffect(() => {
     const fetchSportField = async () => {
@@ -100,16 +92,22 @@ const ChooseSports = ({ navigation }) => {
             key={field.sport_field_id}
             title={field.sport_field_name}
             description={field.description}
+            onPress= {() => navigation.navigate('Field',{
+              description: field.description,
+              name: field.sport_field_name,
+              type: field.sport_type,
+              openTime: field.open_time,
+              closeTime: field.close_time
+            })}
             coordinate={{
               latitude: field.latitude,
               longitude: field.longtitude
             }}>
-            <Image style={styles.imageContainer} source={require('../../../assets/football.png')} />
+              <Image style={styles.imageContainer} source={require('../../../assets/football.png')} />
           </Marker>
         ))}
         <Marker
           coordinate={currentLocation.coords}>
-          <Image style={styles.imageContainer} source={require('../../../assets/profile.jpeg')} />
         </Marker>
       </MapView>
     </View>);

@@ -1,45 +1,33 @@
-import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import url from '../../../../constants/url-constant';
+import React from 'react';
+import {View,Image,Text,StyleSheet} from 'react-native';
 
-class SportsField extends Component {
-   state = {
-      data: ''
-   }
-   componentDidMount = () => {
-      fetch(url.url_sportsfield, {
-         method: 'GET'
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-         console.log(responseJson);
-         this.setState({
-            data: responseJson
-         })
-      })
-      .catch((error) => {
-         console.error(error);
-      });
-   }
-   render() {
-      return (
-         <View>
-         <FlatList
-         data={this.state.data}
-         renderItem={({item}) => {
-        return (
-          <View>
-            <Text style = {styles.headText}> {item.sport_field_name}</Text>
-          </View>
-        )
-      }}
-      keyExtractor={(item, index) => index.toString()}
-     />
-         </View>
-      )
-   }
-}
+const SportsField = ({navigation}) => {
+  const {state} = navigation;
+  var name = state.params ? state.params.name : "<undefined>";
+  var description = state.params ? state.params.description : "<undefined>";
+  var type = state.params ? state.params.type : "<undefined>";
+  var openTime = state.params ? state.params.openTime : "<undefined>";
+  var closeTime = state.params ? state.params.closeTime : "<undefined>";
+
+
+  return <View style = {styles.container}>
+  <Text style = {styles.headText}> {name} </Text>
+  <Image style={styles.Image} source={require('../../../../assets/football.jpg')} />
+  <Text style = {styles.normalText}>Desciption</Text>
+  <Text style = {styles.textStyle}> {description} </Text>
+  <Text style = {styles.textStyle}>Sport type: {type} </Text>
+  <Text style = {styles.textStyle}>Open time: {openTime} </Text>
+  <Text style = {styles.textStyle}>Close time: {closeTime} </Text>
+  </View>
+};
+
 const styles = StyleSheet.create({
+  normalText:{
+    fontSize: 20,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    marginBottom: 10
+  },
   headText: {
     fontSize: 25,
     fontWeight: 'bold',
@@ -50,16 +38,17 @@ const styles = StyleSheet.create({
   textStyle: {
     alignSelf: 'center'
   },
-  row: {
-    height: 200,
-    backgroundColor: '#FFFCF7',
-    borderColor: 'black',
-    borderRadius: 15,
-    margin: 10,
-    borderWidth: 1,
-    marginTop: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+  Image: {
+    height: 225,
+    width:380,
+    resizeMode: 'stretch',
+    borderRadius: 50,
+    marginLeft: 20,
+    marginRight: 20,
+    alignSelf: 'center',
+    borderRadius: 20,
+    marginTop: 10,
+    marginBottom: 15
   }
 });
 
