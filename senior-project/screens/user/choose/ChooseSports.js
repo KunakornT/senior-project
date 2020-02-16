@@ -108,6 +108,7 @@ const ChooseSports = ({ navigation }) => {
         ))}
         <Marker
           coordinate={currentLocation.coords}>
+          <Image style={styles.imageContainer} source={require('../../../assets/profile.jpeg')} />
         </Marker>
       </MapView>
     </View>);

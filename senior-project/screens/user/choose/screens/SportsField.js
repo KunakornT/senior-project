@@ -13,7 +13,7 @@ const SportsField = ({navigation}) => {
   return <View style = {styles.container}>
   <Text style = {styles.headText}> {name} </Text>
   <Image style={styles.Image} source={require('../../../../assets/football.jpg')} />
-  <Text style = {styles.normalText}>Desciption</Text>
+  <Text style = {styles.normalText}>Information</Text>
   <Text style = {styles.textStyle}> {description} </Text>
   <Text style = {styles.textStyle}>Sport type: {type} </Text>
   <Text style = {styles.textStyle}>Open time: {openTime} </Text>
