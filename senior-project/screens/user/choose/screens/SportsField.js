@@ -1,14 +1,17 @@
-import React from 'react';
-import {View,Image,Text,StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View,Image,Text,StyleSheet,FlatList,Button} from 'react-native';
+import url from '../../../../constants/url-constant';
 
 const SportsField = ({navigation}) => {
   const {state} = navigation;
+  const [data, setData] = useState('');
+  const [subField, setSubField] = useState(null);
+  var id = state.params ? state.params.id : "<undefined>";
   var name = state.params ? state.params.name : "<undefined>";
   var description = state.params ? state.params.description : "<undefined>";
   var type = state.params ? state.params.type : "<undefined>";
   var openTime = state.params ? state.params.openTime : "<undefined>";
   var closeTime = state.params ? state.params.closeTime : "<undefined>";
-
 
   return <View style = {styles.container}>
   <Text style = {styles.headText}> {name} </Text>
@@ -18,6 +21,11 @@ const SportsField = ({navigation}) => {
   <Text style = {styles.textStyle}>Sport type: {type} </Text>
   <Text style = {styles.textStyle}>Open time: {openTime} </Text>
   <Text style = {styles.textStyle}>Close time: {closeTime} </Text>
+  <Button title = "Select the field"
+    onPress = {()=> navigation.navigate('Sub',{
+      id
+    })}
+    />
   </View>
 };
 
