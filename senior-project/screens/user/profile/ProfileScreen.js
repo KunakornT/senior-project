@@ -6,7 +6,7 @@ import Color from '../../../constants/Colors';
 import { AntDesign } from '@expo/vector-icons';
 
 const ProfileScreen = props => {
-
+  const [id, setId] = useState(0);
   const [username, setUsername] = useState('');
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
@@ -36,14 +36,20 @@ const ProfileScreen = props => {
     setAge(calAge);
     setGender(user.gender);
     setEmail(user.email);
+    setId(user.user_id)
   }
 
   useEffect(() => {
+    props.navigation.setParams({ isOnEdit: undefined })
     fetchUserData();
   }, [username])
 
   useEffect(() => {
     props.navigation.setParams({ onEdit });
+    if (isEdit === false && props.navigation.getParam('isOnEdit') !== undefined) {
+      console.log('update profile')
+      updateProfile();
+    }
   }, [isEdit])
 
   const onEdit = () => {
@@ -68,11 +74,30 @@ const ProfileScreen = props => {
       },
       body: JSON.stringify({
         "id": id,
-        "authentication": true
+        "firstname": firstname,
+        "lastname": lastname
       })
     };
     try {
-      response = await fetch(url.url_users, settings);
+      const response = await fetch(url.url_users_profile, settings);
+      const data = await response.json();
+      if (!response.ok) {
+        console.log(data.message);
+      }
+      else {
+        AsyncStorage.getItem('userInfo')
+          .then(data => {
+            // the string value read from AsyncStorage has been assigned to data
+            console.log(data);
+            // transform it back to an object
+            data = JSON.parse(data);
+            data.firstname = firstname;
+            data.lastname = lastname;
+            //save the value to AsyncStorage again
+            AsyncStorage.setItem('userInfo', JSON.stringify(data));
+
+          }).done();
+      }
     }
     catch (err) {
       console.log(err)
@@ -111,7 +136,7 @@ const ProfileScreen = props => {
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.textHeader}>Age:</Text>
-          <TextInput style={styles.input} value={age} editable={false}/>
+          <TextInput style={styles.input} value={age} editable={false} />
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.textHeader}>Email:</Text>
@@ -135,7 +160,7 @@ ProfileScreen.navigationOptions = ({ navigation }) => {
     title: 'Your Profile',
     headerRight: () => (
       <TouchableOpacity onPress={navigation.getParam('onEdit')}>
-        <AntDesign style={styles.headerButton} name={isOnEdit === true ? 'save' : 'edit' } size={23} />
+        <AntDesign style={styles.headerButton} name={isOnEdit === true ? 'save' : 'edit'} size={23} />
       </TouchableOpacity>
     )
   }
