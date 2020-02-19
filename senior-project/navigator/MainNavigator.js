@@ -14,6 +14,7 @@ import VerificationConfirm from '../screens/authentication/VerificationConfirm';
 import ChooseSports from '../screens/user/choose/ChooseSports';
 import Colors from '../constants/Colors';
 import SportsField from '../screens/user/choose/screens/SportsField';
+import SubField from '../screens/user/choose/screens/SubField';
 import {Provider as LocationProvider} from '../context/LocationContext';
 
 const AuthStackNavigation = createStackNavigator({
@@ -36,7 +37,8 @@ const defaultStackNavOption = {
 const HomeStackNavigation = createStackNavigator({
   Home: HomeScreen,
   Choose: ChooseSports,
-  Field: SportsField
+  Field: SportsField,
+  Sub: SubField
 },
 {
   defaultNavigationOptions: defaultStackNavOption

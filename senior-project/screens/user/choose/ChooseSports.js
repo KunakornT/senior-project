@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, Component } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Dimensions, Button, ActivityIndicator, Image, TextInput, Alert, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Permission, Callout } from 'react-native-maps';
 import { requestPermissionsAsync, watchPositionAsync, Accuracy } from 'expo-location';
@@ -93,6 +93,7 @@ const ChooseSports = ({ navigation }) => {
             title={field.sport_field_name}
             description={field.description}
             onPress= {() => navigation.navigate('Field',{
+              id: field.sport_field_id,
               description: field.description,
               name: field.sport_field_name,
               type: field.sport_type,
