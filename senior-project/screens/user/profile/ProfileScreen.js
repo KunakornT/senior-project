@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, Image, StyleSheet, TextInput, Button, TouchableOpacity, AsyncStorage, ScrollView, Platform } from 'react-native';
+import { View, Text, Image, StyleSheet, TextInput, Button, TouchableOpacity, AsyncStorage, ScrollView, Platform, Alert, RefreshControl } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
 
 import url from '../../../constants/url-constant';
 import Color from '../../../constants/Colors';
@@ -13,7 +16,8 @@ const ProfileScreen = props => {
   const [age, setAge] = useState('');
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
-  const [isEdit, setIsEdit] = useState(false)
+  const [isEdit, setIsEdit] = useState(false);
+
 
   function getAge(dateString) {
     var today = new Date();
@@ -38,6 +42,11 @@ const ProfileScreen = props => {
     setEmail(user.email);
     setId(user.user_id)
   }
+
+  useEffect(() => {
+    // console.log(url.url_users_fetch_picture)
+    getPermissionAsync();
+  }, [])
 
   useEffect(() => {
     props.navigation.setParams({ isOnEdit: undefined })
@@ -104,6 +113,59 @@ const ProfileScreen = props => {
     }
   }
 
+  const getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    }
+  }
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1
+    });
+
+    if (result.cancelled) {
+      return;
+    }
+    else {
+      let localUri = result.uri;
+      let filename = localUri.split('/').pop();
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? 'image/' + match[1] : 'image';
+      let formData = new FormData();
+      formData.append("profilePicture", { uri: localUri, name: filename, type });
+      formData.append("username", username)
+      const response = await fetch(url.url_users_profile_picture, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      });
+      const data = await response.json()
+      if(!response.ok){
+        Alert.alert(
+          'Error',
+          data.message,
+          [{ text: 'OK', style: 'destructive'}]
+        );
+      }
+      else{
+        Alert.alert(
+          'Success',
+          data.message,
+          [{ text: 'OK', style: 'destructive'}]
+        );
+      }
+    }
+  };
+
   const logoutHandler = async () => {
     await AsyncStorage.clear();
     props.navigation.navigate('Auth');
@@ -114,8 +176,12 @@ const ProfileScreen = props => {
       <View style={styles.screen}>
         <Text style={styles.name}>{username}</Text>
         <View style={styles.imageContainer}>
-          <TouchableOpacity >
-            <Image style={styles.image} source={require('../../../assets/profile.jpeg')} />
+          <TouchableOpacity onPress={pickImage}>
+            <Image style={styles.image}
+              source={{ uri: url.url_users_fetch_picture + '/' + username + '.jpeg'}}
+              // source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ6qDTLzvOiUh4B1kqaNpaV1cTPvaF3RJ-TnmPP3qkDYwH032mm'}}
+              defaultSource={require('../../../assets/profile.jpeg')} 
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.infoContainer}>
@@ -152,6 +218,7 @@ const ProfileScreen = props => {
       </View>
     </ScrollView>
   );
+
 }
 
 ProfileScreen.navigationOptions = ({ navigation }) => {
