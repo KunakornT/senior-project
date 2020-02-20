@@ -30,6 +30,8 @@ useEffect(() => {
     fetchSubField();
   }, []);
 
+
+
   return <View>
   <Text style = {styles.headText}> Select the field</Text>
   <FlatList
@@ -39,11 +41,17 @@ useEffect(() => {
     return <View>
      <ScrollView>
       <Text style = {styles.normalText}> Field {item.sub_field_id} </Text>
-      <Image style={styles.Image} source={require('../../../../assets/sub.jpg')} />
+      <Image style={styles.Image}
+      source={
+          item.sub_field_id>0 ?
+                  {uri:`https://senior-project-server.herokuapp.com/sport-field/${item.sport_field_id}/sub-field/${item.sub_field_id}.jpeg`} :
+                  require('../../../../assets/football.jpg')}/>
       <Text style = {styles.textStyle2}> Size of the field (width x length) </Text>
       <Text style = {styles.textStyle}> {item.width} x {item.length}</Text>
       <Text style = {styles.textStyle2}> Service rate </Text>
       <Text style = {styles.textStyle}> {item.service_rate} </Text>
+      <Text style = {styles.textStyle2}> Holiday service rate </Text>
+      <Text style = {styles.textStyle}> {item.holiday_service_rate} </Text>
       </ScrollView>
       </View>
   }}/>
