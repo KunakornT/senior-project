@@ -17,6 +17,7 @@ const ProfileScreen = props => {
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [isEdit, setIsEdit] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
 
 
   function getAge(dateString) {
@@ -41,6 +42,7 @@ const ProfileScreen = props => {
     setGender(user.gender);
     setEmail(user.email);
     setId(user.user_id)
+    setImageUrl(url.url_users_fetch_picture + '/' + username + '.jpeg' + '?' + new Date())
   }
 
   useEffect(() => {
@@ -104,7 +106,6 @@ const ProfileScreen = props => {
             data.lastname = lastname;
             //save the value to AsyncStorage again
             AsyncStorage.setItem('userInfo', JSON.stringify(data));
-
           }).done();
       }
     }
@@ -162,6 +163,7 @@ const ProfileScreen = props => {
           data.message,
           [{ text: 'OK', style: 'destructive'}]
         );
+        setImageUrl(url.url_users_fetch_picture + '/' + username + '.jpeg' + '?' + new Date())
       }
     }
   };
@@ -178,7 +180,7 @@ const ProfileScreen = props => {
         <View style={styles.imageContainer}>
           <TouchableOpacity onPress={pickImage}>
             <Image style={styles.image}
-              source={{ uri: url.url_users_fetch_picture + '/' + username + '.jpeg'}}
+              source={{ uri: imageUrl + '?' + new Date()}}
               // source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ6qDTLzvOiUh4B1kqaNpaV1cTPvaF3RJ-TnmPP3qkDYwH032mm'}}
               defaultSource={require('../../../assets/profile.jpeg')} 
             />
