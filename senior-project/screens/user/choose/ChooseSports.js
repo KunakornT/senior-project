@@ -17,6 +17,7 @@ const ChooseSports = ({ navigation }) => {
   const { addLocation, getField } = useContext(LocationContext);
   const [err, setErr] = useState(null);
   const [sportField, setSportField] = useState(null);
+  const [username, setUsername] = useState(null);
 
   const startWatching = async () => {
     try {
@@ -35,6 +36,11 @@ const ChooseSports = ({ navigation }) => {
   };
 
   useEffect(() => {
+    const fetchUsername = async () => {
+      let data = await AsyncStorage.getItem('userInfo');
+      let user = await JSON.parse(data);
+      setUsername(user.username);
+    }
     const fetchSportField = async () => {
       const response = await fetch(url.url_sportsfield, {
         method: 'GET'
@@ -53,6 +59,7 @@ const ChooseSports = ({ navigation }) => {
     }
     startWatching();
     fetchSportField();
+    fetchUsername();
     // const listener = navigation.addListener('didFocus', () => {
     //   fetchSportField();
     // });
@@ -109,7 +116,11 @@ const ChooseSports = ({ navigation }) => {
         ))}
         <Marker
           coordinate={currentLocation.coords}>
-          <Image style={styles.imageContainer} source={require('../../../assets/profile.jpeg')} />
+          <Image 
+            style={styles.imageContainer} 
+            defaultSource={require('../../../assets/profile.jpeg')} 
+            source={{ uri: url.url_users_fetch_picture + '/' + username + '.jpeg'}} 
+          />
         </Marker>
       </MapView>
     </View>);
