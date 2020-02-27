@@ -65,7 +65,7 @@ const LoginScreen = props => {
           return Promise.all([statusCode, data]);
         })
         .then(([res, data]) => {
-          console.log(res, data);
+          // console.log(res, data);
           if (res !== 200) {
             Alert.alert(
               'Invalid Input',

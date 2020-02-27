@@ -42,7 +42,7 @@ const ProfileScreen = props => {
     setGender(user.gender);
     setEmail(user.email);
     setId(user.user_id)
-    setImageUrl(url.url_users_fetch_picture + '/' + username + '.jpeg' + '?' + new Date())
+    setImageUrl(user.profile_picture)
   }
 
   useEffect(() => {
@@ -99,7 +99,7 @@ const ProfileScreen = props => {
         AsyncStorage.getItem('userInfo')
           .then(data => {
             // the string value read from AsyncStorage has been assigned to data
-            console.log(data);
+            // console.log(data);
             // transform it back to an object
             data = JSON.parse(data);
             data.firstname = firstname;
@@ -163,7 +163,8 @@ const ProfileScreen = props => {
           data.message,
           [{ text: 'OK', style: 'destructive'}]
         );
-        setImageUrl(url.url_users_fetch_picture + '/' + username + '.jpeg' + '?' + new Date())
+        AsyncStorage.setItem('userInfo', JSON.stringify(data.data));
+        setImageUrl(data.data.profile_picture)
       }
     }
   };
@@ -180,8 +181,8 @@ const ProfileScreen = props => {
         <View style={styles.imageContainer}>
           <TouchableOpacity onPress={pickImage}>
             <Image style={styles.image}
-              source={{ uri: imageUrl + '?' + new Date()}}
-              // source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ6qDTLzvOiUh4B1kqaNpaV1cTPvaF3RJ-TnmPP3qkDYwH032mm'}}
+              // source={{ uri: imageUrl + '?' + new Date()}}
+              source={{ uri: 'data:image/png;base64,'+imageUrl}}
               defaultSource={require('../../../assets/profile.jpeg')} 
             />
           </TouchableOpacity>
