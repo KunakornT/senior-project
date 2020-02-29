@@ -15,6 +15,7 @@ import ChooseSports from '../screens/user/choose/ChooseSports';
 import Colors from '../constants/Colors';
 import SportsField from '../screens/user/choose/screens/SportsField';
 import SubField from '../screens/user/choose/screens/SubField';
+import BookingForm from '../screens/user/choose/screens/BookingForm';
 import {Provider as LocationProvider} from '../context/LocationContext';
 
 const AuthStackNavigation = createStackNavigator({
@@ -38,7 +39,8 @@ const HomeStackNavigation = createStackNavigator({
   Home: HomeScreen,
   Choose: ChooseSports,
   Field: SportsField,
-  Sub: SubField
+  Sub: SubField,
+  Form: BookingForm
 },
 {
   defaultNavigationOptions: defaultStackNavOption

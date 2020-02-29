@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {View,Image,Text,StyleSheet,FlatList,ScrollView} from 'react-native';
+import {View,Image,Text,StyleSheet,FlatList,ScrollView, TouchableOpacity} from 'react-native';
 import url from '../../../../constants/url-constant';
 
 const SubField = ({navigation}) => {
   const {state} = navigation;
   const [data, setData] = useState('');
-  const [subField, setSubField] = useState(null);
+  const [subField, setSubField] = useState('');
   var id = state.params ? state.params.id : "<undefined>";
 
 useEffect(() => {
@@ -41,11 +41,17 @@ useEffect(() => {
     return <View>
      <ScrollView>
       <Text style = {styles.normalText}> Field {item.sub_field_id} </Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Form',{
+        id: item.sub_field_id,
+        width: item.width,
+        length: item.length,
+        service: item.service_rate,
+        holiday: item.holiday_service_rate
+      })} >
       <Image style={styles.Image}
-      source={
-          item.sub_field_id>0 ?
-                  {uri:`https://senior-project-server.herokuapp.com/sport-field/${item.sport_field_id}/sub-field/${item.sub_field_id}.jpeg`} :
-                  require('../../../../assets/football.jpg')}/>
+      defaultSource={require('../../../../assets/football.jpg')}
+      source={{uri:`https://senior-project-server.herokuapp.com/sport-field/${item.sport_field_id}/sub-field/${item.sub_field_id}.jpeg`}}/>
+      </TouchableOpacity>
       <Text style = {styles.textStyle2}> Size of the field (width x length) </Text>
       <Text style = {styles.textStyle}> {item.width} x {item.length}</Text>
       <Text style = {styles.textStyle2}> Service rate </Text>
@@ -65,7 +71,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     alignSelf: 'center',
     marginBottom: 10,
-    marginTop: 10
+    marginTop: 20,
+    color: '#0f4c75'
   },
   headText: {
     fontSize: 25,
@@ -95,7 +102,8 @@ const styles = StyleSheet.create({
   textStyle2:{
     alignSelf: 'center',
     fontSize: 15,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    margin: 5,
   }
 });
 

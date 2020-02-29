@@ -16,10 +16,8 @@ const SportsField = ({navigation}) => {
   return <View style = {styles.container}>
   <Text style = {styles.headText}> {name} </Text>
   <Image style={styles.Image}
-  source={
-      id > 0?
-              {uri:`https://senior-project-server.herokuapp.com/sport-field/${id}/sport-field.jpeg`} :
-              require('../../../../assets/football.jpg')}/>
+  defaultSource={require('../../../../assets/football.jpg')}
+  source={{uri:`https://senior-project-server.herokuapp.com/sport-field/${id}/sport-field.jpeg`}}/>
   <Text style = {styles.normalText}>Information</Text>
   <Text style = {styles.textStyle}> {description} </Text>
   <Text style = {styles.textStyle}>Sport type: {type} </Text>

@@ -116,10 +116,10 @@ const ChooseSports = ({ navigation }) => {
         ))}
         <Marker
           coordinate={currentLocation.coords}>
-          <Image 
-            style={styles.imageContainer} 
-            defaultSource={require('../../../assets/profile.jpeg')} 
-            source={{ uri: url.url_users_fetch_picture + '/' + username + '.jpeg'}} 
+          <Image
+            style={styles.imageContainer}
+            defaultSource={require('../../../assets/profile.jpeg')}
+            source={{ uri: url.url_users_fetch_picture + '/' + username + '.jpeg'}}
           />
         </Marker>
       </MapView>
