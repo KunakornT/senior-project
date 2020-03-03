@@ -1,10 +1,9 @@
 import React,{useState} from 'react';
-import {View,Text,StyleSheet,TextInput,Button,TouchableOpacity, ScrollView} from 'react-native';
-import Slider from "react-native-slider";
+import {View,Text,StyleSheet,TextInput,Button,TouchableOpacity, ScrollView,Slider} from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {MaterialIcons,AntDesign} from '@expo/vector-icons';
 
-const BookingForm = ({navigation}) => {
+const BookingForm = ({navigation,props}) => {
   const {state} = navigation;
   const [reserve_user,setReserve] = useState('');
   const [description,setDescription] = useState('');
