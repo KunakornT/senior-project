@@ -39,7 +39,7 @@ useEffect(() => {
   keyExtractor = {(subField) => subField.id}
   renderItem= {({item}) => {
     return <View>
-     <ScrollView>
+      <ScrollView>
       <Text style = {styles.normalText}> Field {item.sub_field_id} </Text>
       <TouchableOpacity onPress={() => navigation.navigate('Form',{
         id: item.sub_field_id,
@@ -58,7 +58,7 @@ useEffect(() => {
       <Text style = {styles.textStyle}> {item.service_rate} </Text>
       <Text style = {styles.textStyle2}> Holiday service rate </Text>
       <Text style = {styles.textStyle}> {item.holiday_service_rate} </Text>
-      </ScrollView>
+        </ScrollView>
       </View>
   }}/>
   </View>

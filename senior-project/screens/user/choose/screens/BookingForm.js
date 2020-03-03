@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {View,Text,StyleSheet,TextInput,Button,TouchableOpacity} from 'react-native';
+import {View,Text,StyleSheet,TextInput,Button,TouchableOpacity, ScrollView} from 'react-native';
 import Slider from "react-native-slider";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {MaterialIcons,AntDesign} from '@expo/vector-icons';
@@ -60,7 +60,7 @@ const timeConfirmHandler2 = end => {
 };
 
   return < View>
-
+  <ScrollView>
   <Text style= {styles.header}> Booking Information </Text>
   <Text style = {styles.textStyle2}> Field: {id} </Text>
   <Text style = {styles.textStyle2}> Size of the field {width} x {length} </Text>
@@ -79,7 +79,7 @@ const timeConfirmHandler2 = end => {
 
   <Text style={styles.label3}> Please select the date and time  </Text>
 
- <View style= {styles.titleContainer}>
+ <View style= {styles.titleContainer2}>
 <TouchableOpacity title = "pick the date" onPress={showDatePicker} >
   <DateTimePickerModal
 
@@ -97,13 +97,13 @@ const timeConfirmHandler2 = end => {
   />
   <View style={styles.titleContainer}>
   <AntDesign name='calendar' size={25} color='#d63447'/>
-  <Text style={styles.textStyle3}>Date</Text>
+  <Text style={styles.textStyle3}>Date </Text>
   </View>
   <TextInput value={date} editable={false} style={styles.textStyle2} />
 </TouchableOpacity>
 </View>
 
-<View style= {styles.titleContainer}>
+<View style= {styles.titleContainer2}>
 
     <TouchableOpacity title = "pick the time" onPress={showTimePicker} >
       <DateTimePickerModal
@@ -119,9 +119,10 @@ const timeConfirmHandler2 = end => {
         onCancel={hideTimePicker}
         date={new Date()}
       />
+
       <View style={styles.titleContainer}>
       <MaterialIcons name='timer' size={25} color='#d63447'/>
-      <Text style={styles.textStyle3}>Start Time</Text>
+      <Text style={styles.textStyle3}>Start Time </Text>
       </View>
       <TextInput value={start_time} editable={false} style={styles.textStyle2} />
     </TouchableOpacity>
@@ -144,7 +145,7 @@ const timeConfirmHandler2 = end => {
       />
       <View style={styles.titleContainer}>
       <MaterialIcons name='timer-off' size={25} color='#d63447'/>
-      <Text style={styles.textStyle3}>End Time</Text>
+      <Text style={styles.textStyle3}>End Time </Text>
       </View>
       <TextInput value={end_time} editable={false} style={styles.textStyle2} />
     </TouchableOpacity>
@@ -162,6 +163,7 @@ const timeConfirmHandler2 = end => {
     maximumValue={33}
     minimumTrackTintColor="#d63447"
     maximumTrackTintColor="#000000"
+    thumbTintColor= "#c81912"
     />
     <Text style={styles.textStyle2}>Players: {player} </Text>
     </View>
@@ -170,6 +172,7 @@ const timeConfirmHandler2 = end => {
   title = "Book the field"
   onPress = {() => navigation.navigate('Home')}
   />
+  </ScrollView>
   </View>
 };
 
@@ -237,16 +240,25 @@ const styles = StyleSheet.create({
   textStyle3:{
     alignSelf: 'center',
     fontSize: 20,
-    margin: 1,
+    margin: 2,
     fontWeight: 'bold',
-    color:'#d63447'
+    color:'#c81912'
   },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     margin: 5,
-    color : '#FF9800',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    borderWidth: 2,
+    borderColor: '#c81912',
+    borderRadius: 10,
+    padding: 2
+  },
+  titleContainer2: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 5,
+    alignSelf: 'center',
   },
   label2:{
     fontSize: 18,
