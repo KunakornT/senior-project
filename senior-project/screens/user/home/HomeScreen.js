@@ -1,5 +1,5 @@
 import React,{ useState, useEffect } from 'react';
-import {View,Text,Image,StyleSheet,ScrollView,Button,TouchableOpacity,AsyncStorage} from 'react-native';
+import {View,Text,Image,StyleSheet,ScrollView,Button,TouchableOpacity,AsyncStorage,FlatList} from 'react-native';
 import SelectSports from '../../../components/SelectSports';
 import EventsNearby from '../../../components/EventsNearby';
 import {Ionicons} from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import url from '../../../constants/url-constant';
 const HomeScreen = ({ navigation }) => {
 
   const [username, setUsername] = useState(null);
+
 
   useEffect(() => {
     async function fetchUserData() {
@@ -29,7 +30,7 @@ const HomeScreen = ({ navigation }) => {
         </View>
         <Text style={styles.headText}>  Events nearby you  </Text>
         <View>
-          <TouchableOpacity onPress={() => navigation.navigate('Choose')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Field')}>
             <EventsNearby
               title="Futsal Park RAMA II"
               imageSource={require('../../../assets/football.jpg')} />
