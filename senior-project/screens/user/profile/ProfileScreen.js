@@ -143,13 +143,13 @@ const ProfileScreen = props => {
       formData.append("profilePicture", { uri: localUri, name: filename, type });
       formData.append("username", username)
       const response = await fetch(url.url_users_profile_picture, {
-        method: 'POST',
+        method: 'PATCH',
         body: formData,
         headers: {
           'content-type': 'multipart/form-data',
         },
       });
-      const data = await response.json()
+      const data = await response.json();
       if(!response.ok){
         Alert.alert(
           'Error',
