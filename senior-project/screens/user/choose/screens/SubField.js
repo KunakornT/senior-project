@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View,Image,Text,StyleSheet,FlatList,ScrollView, TouchableOpacity} from 'react-native';
+import {View,Image,Text,StyleSheet,FlatList,ScrollView,TouchableOpacity} from 'react-native';
 import url from '../../../../constants/url-constant';
 
 const SubField = ({navigation}) => {
@@ -40,24 +40,27 @@ useEffect(() => {
   renderItem= {({item}) => {
     return <View>
       <ScrollView>
+      <View style = {styles.container}>
       <Text style = {styles.normalText}> Field {item.sub_field_id} </Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Form',{
-        id: item.sub_field_id,
-        width: item.width,
-        length: item.length,
-        service: item.service_rate,
-        holiday: item.holiday_service_rate
-      })} >
       <Image style={styles.Image}
       defaultSource={require('../../../../assets/football.jpg')}
       source={{uri:`https://senior-project-server.herokuapp.com/sport-field/${item.sport_field_id}/sub-field/${item.sub_field_id}.jpeg`}}/>
-      </TouchableOpacity>
       <Text style = {styles.textStyle2}> Size of the field (width x length) </Text>
       <Text style = {styles.textStyle}> {item.width} x {item.length}</Text>
       <Text style = {styles.textStyle2}> Service rate </Text>
       <Text style = {styles.textStyle}> {item.service_rate} </Text>
       <Text style = {styles.textStyle2}> Holiday service rate </Text>
       <Text style = {styles.textStyle}> {item.holiday_service_rate} </Text>
+      <TouchableOpacity style = {styles.button} onPress={() => navigation.navigate('Form',{
+        id: item.sub_field_id,
+        width: item.width,
+        length: item.length,
+        service: item.service_rate,
+        holiday: item.holiday_service_rate
+      })} >
+      <Text style = {styles.textButton}> Next </Text>
+      </TouchableOpacity>
+        </View>
         </ScrollView>
       </View>
   }}/>
@@ -72,7 +75,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 10,
     marginTop: 20,
-    color: '#0f4c75'
   },
   headText: {
     fontSize: 25,
@@ -89,13 +91,13 @@ const styles = StyleSheet.create({
   },
   Image: {
     height: 225,
-    width:380,
+    width:350,
     resizeMode: 'stretch',
     borderRadius: 50,
     marginLeft: 20,
     marginRight: 20,
     alignSelf: 'center',
-    borderRadius: 20,
+    borderRadius: 25,
     marginTop: 10,
     marginBottom: 15
   },
@@ -104,6 +106,26 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     margin: 5,
+  },
+  button:{
+    borderRadius: 50,
+    borderWidth: 2,
+    alignSelf: 'center',
+    margin:10,
+    backgroundColor: '#FFA64B',
+    borderColor: 'white'
+  },
+  textButton:{
+    fontSize: 20,
+    color: 'white',
+    alignSelf: 'center',
+    padding: 10
+  },
+  container: {
+    borderWidth: 1,
+    flex: 1,
+    margin: 15
+
   }
 });
 

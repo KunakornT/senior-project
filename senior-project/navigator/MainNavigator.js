@@ -37,7 +37,7 @@ const defaultStackNavOption = {
 
 const HomeStackNavigation = createStackNavigator({
   Home: HomeScreen,
-  Choose: ChooseSports,
+  Football: ChooseSports,
   Field: SportsField,
   Sub: SubField,
   Form: BookingForm

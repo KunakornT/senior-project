@@ -7,7 +7,7 @@ import {AntDesign} from '@expo/vector-icons';
 const SelectSports = ({navigation}) => {
   return (
   <View >
-  <TouchableOpacity onPress = {() => navigation.navigate('Choose')}>
+  <TouchableOpacity onPress = {() => navigation.navigate('Football')}>
   <Ionicons name = "ios-football" style= {styles.iconstyle}/>
   </TouchableOpacity>
   </View>
