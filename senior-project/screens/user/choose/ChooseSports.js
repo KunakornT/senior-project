@@ -18,6 +18,7 @@ const ChooseSports = ({ navigation }) => {
   const [err, setErr] = useState(null);
   const [sportField, setSportField] = useState(null);
   const [username, setUsername] = useState(null);
+  const [image, setImage] = useState('')
 
   const startWatching = async () => {
     try {
@@ -40,6 +41,7 @@ const ChooseSports = ({ navigation }) => {
       let data = await AsyncStorage.getItem('userInfo');
       let user = await JSON.parse(data);
       setUsername(user.username);
+      setImage(user.profile_picture);
     }
     const fetchSportField = async () => {
       const response = await fetch(url.url_sportsfield, {
@@ -88,11 +90,11 @@ const ChooseSports = ({ navigation }) => {
           latitudeDelta: 0.005,
           longitudeDelta: 0.005
         }}
-        /*region={{
-          ...currentLocation.coords,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005
-        }}*/
+        //  region={{
+        //    ...currentLocation.coords,
+        //    latitudeDelta: 0.005,
+        //    longitudeDelta: 0.005
+        //  }}
       >
         {(sportField !== null) && sportField.map(field => (
           <Marker
@@ -119,7 +121,8 @@ const ChooseSports = ({ navigation }) => {
           <Image
             style={styles.imageContainer}
             defaultSource={require('../../../assets/profile.jpeg')}
-            source={{ uri: url.url_users_fetch_picture + '/' + username + '.jpeg'}}
+            // source={{ uri: url.url_users_fetch_picture + '/' + username + '.jpeg'}}
+            source={{ uri: 'data:image/png;base64,'+image}}
           />
         </Marker>
       </MapView>
