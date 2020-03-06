@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View,Image,Text,StyleSheet,FlatList,Button} from 'react-native';
+import {View,Image,Text,StyleSheet,FlatList,TouchableOpacity} from 'react-native';
 import url from '../../../../constants/url-constant';
 
 const SportsField = ({navigation}) => {
@@ -23,11 +23,9 @@ const SportsField = ({navigation}) => {
   <Text style = {styles.textStyle}>Sport type: {type} </Text>
   <Text style = {styles.textStyle}>Open time: {openTime} </Text>
   <Text style = {styles.textStyle}>Close time: {closeTime} </Text>
-  <Button title = "Select the field"
-    onPress = {()=> navigation.navigate('Sub',{
-      id
-    })}
-   />
+  <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('Sub',{id})}>
+  <Text style = {styles.textButton}> Next </Text>
+  </TouchableOpacity>
   </View>
 };
 
@@ -46,7 +44,8 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   textStyle: {
-    alignSelf: 'center'
+    alignSelf: 'center',
+    fontSize: 15
   },
   Image: {
     height: 225,
@@ -59,6 +58,20 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginTop: 10,
     marginBottom: 15
+  },
+  button:{
+    borderRadius: 50,
+    borderWidth: 2,
+    alignSelf: 'center',
+    margin:10,
+    backgroundColor: '#FFA64B',
+    borderColor: 'white'
+  },
+  textButton:{
+    fontSize: 20,
+    color: 'white',
+    alignSelf: 'center',
+    padding: 10
   }
 });
 

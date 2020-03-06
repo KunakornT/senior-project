@@ -62,12 +62,12 @@ const ChooseSports = ({ navigation }) => {
     startWatching();
     fetchSportField();
     fetchUsername();
-    // const listener = navigation.addListener('didFocus', () => {
-    //   fetchSportField();
-    // });
-    // return () => {
-    //   listener.remove();
-    // };
+    const listener = navigation.addListener('didFocus', () => {
+       fetchSportField();
+     });
+    return () => {
+       listener.remove();
+     };
   }, []);
 
   const { state: { currentLocation } } = useContext(LocationContext);
@@ -82,6 +82,7 @@ const ChooseSports = ({ navigation }) => {
           <TextInput style={styles.text} />
         </View>
       </Card>
+      <Text style = {styles.normalText}>Click on a ball to select the sport field</Text>
       <MapView style={styles.mapStyle}
         provider={PROVIDER_GOOGLE}
         showUserLocation={true}
@@ -147,8 +148,8 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   mapStyle: {
-    width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
   },
   headText: {
     fontSize: 25,
@@ -166,7 +167,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginVertical: 20,
     borderColor: 'orange'
-  }
+  },
+    normalText:{
+    fontSize: 20,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    marginBottom: 10,
+    color: '#FFA64B'
+  },
 });
 
 export default ChooseSports;

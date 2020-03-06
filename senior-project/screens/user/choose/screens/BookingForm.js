@@ -63,20 +63,7 @@ const timeConfirmHandler2 = end => {
   <Text style= {styles.header}> Booking Information </Text>
   <Text style = {styles.textStyle2}> Field: {id} </Text>
   <Text style = {styles.textStyle2}> Size of the field {width} x {length} </Text>
-  <Text style={styles.label}> Name of booking:  </Text>
-  <TextInput
-    style = {styles.inputName}
-    value={reserve_user}
-    onChangeText={(text) => setReserve(text)}/>
-  <Text style={styles.label}> Description: </Text>
-  <TextInput
-    style = {styles.inputContent}
-    multiline={true}
-    value={description}
-    onChangeText={text => setDescription(text)}/>
 
-
-  <Text style={styles.label3}> Please select the date and time  </Text>
 
  <View style= {styles.titleContainer2}>
 <TouchableOpacity title = "pick the date" onPress={showDatePicker} >
@@ -126,7 +113,6 @@ const timeConfirmHandler2 = end => {
       <TextInput value={start_time} editable={false} style={styles.textStyle2} />
     </TouchableOpacity>
 
-        <Text style={styles.textStyle2}> ----> </Text>
 
     <TouchableOpacity title = "pick the time" onPress={showTimePicker2} >
       <DateTimePickerModal
@@ -150,7 +136,7 @@ const timeConfirmHandler2 = end => {
     </TouchableOpacity>
     </View>
 
-  <Text style={styles.label3}> Please limit number of players  </Text>
+  <Text style={styles.label3}> Request player  </Text>
 
     <View style={styles.slideBar}>
     <Slider
@@ -167,10 +153,17 @@ const timeConfirmHandler2 = end => {
     <Text style={styles.textStyle2}>Players: {player} </Text>
     </View>
 
-  <Button
-  title = "Book the field"
-  onPress = {() => navigation.navigate('Home')}
-  />
+  <Text style={styles.label}> Note: </Text>
+  <TextInput
+    style = {styles.inputContent}
+    multiline={true}
+    value={description}
+    onChangeText={text => setDescription(text)}/>
+
+    <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('Home')}>
+    <Text style = {styles.textButton}> Confirm </Text>
+    </TouchableOpacity>
+
   </ScrollView>
   </View>
 };
@@ -251,7 +244,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#c81912',
     borderRadius: 10,
-    padding: 2
+    padding: 2,
+    marginRight: 10
   },
   titleContainer2: {
     flexDirection: 'row',
@@ -270,7 +264,21 @@ const styles = StyleSheet.create({
   slideBar:{
     alignItems: 'stretch',
     alignSelf: 'center'
-  }
+  },
+  button:{
+      borderRadius: 50,
+      borderWidth: 2,
+      alignSelf: 'center',
+      margin:10,
+      backgroundColor: '#FFA64B',
+      borderColor: 'white'
+    },
+    textButton:{
+      fontSize: 20,
+      color: 'white',
+      alignSelf: 'center',
+      padding: 10
+    }
 
 });
 
