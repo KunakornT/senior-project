@@ -27,7 +27,7 @@ const EventScreen = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const response = await fetch(url.url_match_user + '/' + userId);
+        const response = await fetch(url.url_user_event + '/' + userId);
         const responseJson = await response.json();
         setEvent(responseJson);
         console.log(responseJson);

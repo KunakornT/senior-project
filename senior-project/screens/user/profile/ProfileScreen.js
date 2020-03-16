@@ -89,28 +89,46 @@ const ProfileScreen = props => {
         "lastname": lastname
       })
     };
-    try {
-      const response = await fetch(url.url_users_profile, settings);
-      const data = await response.json();
-      if (!response.ok) {
-        console.log(data.message);
-      }
-      else {
-        AsyncStorage.getItem('userInfo')
-          .then(data => {
-            // the string value read from AsyncStorage has been assigned to data
-            // console.log(data);
-            // transform it back to an object
-            data = JSON.parse(data);
-            data.firstname = firstname;
-            data.lastname = lastname;
-            //save the value to AsyncStorage again
-            AsyncStorage.setItem('userInfo', JSON.stringify(data));
-          }).done();
-      }
+    if (firstname.trim() === '' || lastname.trim() === '') {
+      Alert.alert(
+        'Invalid username or password',
+        'please specify username and password',
+        [{ text: 'OK', style: 'destructive' }]
+      );
+      let data = await AsyncStorage.getItem('userInfo');
+      let user = await JSON.parse(data);
+      setFirstname(user.firstname);
+      setLastname(user.lastname);
     }
-    catch (err) {
-      console.log(err)
+    else {
+      try {
+        const response = await fetch(url.url_users_profile, settings);
+        const data = await response.json();
+        if (!response.ok) {
+          console.log(data.message);
+        }
+        else {
+          Alert.alert(
+            'Success',
+            data.message,
+            [{ text: 'OK', style: 'destructive' }]
+          );
+          AsyncStorage.getItem('userInfo')
+            .then(data => {
+              // the string value read from AsyncStorage has been assigned to data
+              // console.log(data);
+              // transform it back to an object
+              data = JSON.parse(data);
+              data.firstname = firstname;
+              data.lastname = lastname;
+              //save the value to AsyncStorage again
+              AsyncStorage.setItem('userInfo', JSON.stringify(data));
+            }).done();
+        }
+      }
+      catch (err) {
+        console.log(err)
+      }
     }
   }
 
@@ -150,18 +168,18 @@ const ProfileScreen = props => {
         },
       });
       const data = await response.json();
-      if(!response.ok){
+      if (!response.ok) {
         Alert.alert(
           'Error',
           data.message,
-          [{ text: 'OK', style: 'destructive'}]
+          [{ text: 'OK', style: 'destructive' }]
         );
       }
-      else{
+      else {
         Alert.alert(
           'Success',
           data.message,
-          [{ text: 'OK', style: 'destructive'}]
+          [{ text: 'OK', style: 'destructive' }]
         );
         AsyncStorage.setItem('userInfo', JSON.stringify(data.data));
         setImageUrl(data.data.profile_picture)
@@ -182,8 +200,8 @@ const ProfileScreen = props => {
           <TouchableOpacity onPress={pickImage}>
             <Image style={styles.image}
               // source={{ uri: imageUrl + '?' + new Date()}}
-              source={{ uri: 'data:image/png;base64,'+imageUrl}}
-              defaultSource={require('../../../assets/profile.jpeg')} 
+              source={{ uri: 'data:image/png;base64,' + imageUrl }}
+              defaultSource={require('../../../assets/profile.jpeg')}
             />
           </TouchableOpacity>
         </View>

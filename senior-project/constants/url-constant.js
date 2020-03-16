@@ -11,5 +11,5 @@ export default{
   url_users_fetch_picture: url+'/profile-picture', //for fetching image
   url_login: url+'/login',
   url_sportsfield: url+'/sport-field',
-  url_match_user: url+'/match-user' 
+  url_user_event: url+'/user-event' 
 }
