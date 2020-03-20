@@ -9,6 +9,7 @@ import HomeScreen from '../screens/user/home/HomeScreen';
 import NotificationScreen from '../screens/user/notification/NotificationScreen';
 import ProfileScreen from '../screens/user/profile/ProfileScreen';
 import EventScreen from '../screens/user/event/EventScreen';
+import EventInfoScreen from '../screens/user/event/EventInfoScreen';
 import RegisterScreen from '../screens/authentication/RegisterScreen';
 import VerificationConfirm from '../screens/authentication/VerificationConfirm';
 import ChooseSports from '../screens/user/choose/ChooseSports';
@@ -62,6 +63,7 @@ const ProfileStackNavigation = createStackNavigator({
 
 const EventStackNavigation = createStackNavigator({
   Event: EventScreen,
+  Information: EventInfoScreen
 },
 {
   defaultNavigationOptions: defaultStackNavOption

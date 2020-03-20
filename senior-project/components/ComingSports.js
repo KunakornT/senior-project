@@ -4,36 +4,36 @@ import { View, Text, StyleSheet, Image, ImageBackground, Dimensions, TouchableOp
 import Card from './Card';
 import Color from '../constants/Colors'
 
-const ComingSports = ({ imageSource, title, start, end, maxPlayer, numberPlayer }) => {
+const ComingSports = (props) => {
   function addZero(i) {
     if (i < 10) {
       i = "0" + i;
     }
     return i;
   }
-  const date = new Date(start).getUTCDate();
-  const month = new Date(start).getUTCMonth() + 1;
-  const year = new Date(start).getUTCFullYear();
-  const startHour = addZero(new Date(start).getUTCHours());
-  const startMinute = addZero(new Date(start).getUTCMinutes());
-  const endHour = addZero(new Date(end).getUTCHours());
-  const endMinute = addZero(new Date(end).getUTCMinutes());
+  const date = new Date(props.item.start_time).getUTCDate();
+  const month = new Date(props.item.start_time).getUTCMonth() + 1;
+  const year = new Date(props.item.start_time).getUTCFullYear();
+  const startHour = addZero(new Date(props.item.start_time).getUTCHours());
+  const startMinute = addZero(new Date(props.item.start_time).getUTCMinutes());
+  const endHour = addZero(new Date(props.item.end_time).getUTCHours());
+  const endMinute = addZero(new Date(props.item.end_time).getUTCMinutes());
   const [startDate, setStartDate] = useState(date + '/' + month + '/' + year);
   const [startTime, setStartTime] = useState(startHour + ':' + startMinute);
   const [endTime, setEndTime] = useState(endHour + ':' + endMinute);
-  if (!imageSource) {
+  if (!props.imageSource) {
     return null;
   }
   return (
     <Card style={styles.card}>
       <View style={styles.imageContainer}>
-        <ImageBackground source={imageSource} style={styles.Image} imageStyle={{ borderRadius: 10 }}>
-          <Text style={styles.textHeader}>  Sport Field: {title} </Text>
+        <ImageBackground source={props.imageSource} style={styles.Image} imageStyle={{ borderRadius: 10 }}>
+          <Text style={styles.textHeader}>  Sport Field: {props.item.sport_field_name} </Text>
           <Text style={styles.textStyle}> Date: {startDate}</Text>
           <Text style={styles.textStyle}> Time: {startTime} - {endTime}</Text>
-          <Text style={styles.textStyle}> Player: {numberPlayer}/{maxPlayer}</Text>
+          <Text style={styles.textStyle}> Player: {props.item.number_player}/{props.item.max_player}</Text>
           <View style={styles.bottom}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={props.onViewInfo}>
               <Text style={styles.textButton}> Information </Text>
             </TouchableOpacity>
           </View>

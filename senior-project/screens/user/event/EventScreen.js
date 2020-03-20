@@ -7,7 +7,7 @@ import HistorySports from '../../../components/HistorySports';
 import url from '../../../constants/url-constant';
 
 
-const EventScreen = () => {
+const EventScreen = (props) => {
 
   const [userId, setUserId] = useState();
   const [event, setEvent] = useState();
@@ -46,11 +46,14 @@ const EventScreen = () => {
          if(new Date(item.end_time) > new Date()){
           return <ComingSports 
           key={item.match_id} 
-          title={item.sport_field_name} 
+          item = {item}
+          navigation = {navigator}
           imageSource={require('../../../assets/football.jpg')}
-          start={item.start_time}
-          maxPlayer={item.max_player}
-          numberPlayer={item.number_player}/>
+          onViewInfo={() => {
+            props.navigation.navigate('Information', {
+              information: item
+            })
+          }}/>
         }
       })}
       {/* <ComingSports title="Futsal Park RAMA II"
@@ -60,12 +63,14 @@ const EventScreen = () => {
          if(new Date(item.end_time) < new Date()){
           return <ComingSports 
           key={item.match_id} 
-          title={item.sport_field_name} 
+          item = {item}
+          navigation = {navigator}
           imageSource={require('../../../assets/football.jpg')}
-          start={item.start_time}
-          end = {item.end_time}
-          maxPlayer={item.max_player}
-          numberPlayer={item.number_player}/>
+          onViewInfo={() => {
+            props.navigation.navigate('Information', {
+              information: item
+            })
+          }}/>
         }
       })}
       {/* <HistorySports title="Futsal Park RAMA II"
