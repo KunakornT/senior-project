@@ -63,6 +63,7 @@ const EventScreen = () => {
           title={item.sport_field_name} 
           imageSource={require('../../../assets/football.jpg')}
           start={item.start_time}
+          end = {item.end_time}
           maxPlayer={item.max_player}
           numberPlayer={item.number_player}/>
         }
@@ -80,6 +81,9 @@ const EventScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  noEventText: {
+    textAlign: 'center'
+  },
   textStyle: {
     fontSize: 25,
     fontWeight: 'bold',
