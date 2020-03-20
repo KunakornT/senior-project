@@ -1,25 +1,36 @@
-import React,{useState} from 'react';
-import {View,Text,StyleSheet,TextInput,Button,TouchableOpacity, ScrollView,Slider} from 'react-native';
+import React,{useState,useEffect} from 'react';
+import {View,Text,StyleSheet,TextInput,Button,TouchableOpacity, ScrollView,Slider,AsyncStorage} from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {MaterialIcons,AntDesign} from '@expo/vector-icons';
+import url from '../../../../constants/url-constant';
 
 const BookingForm = ({navigation,props}) => {
   const {state} = navigation;
-  const [reserve_user,setReserve] = useState('');
+  const [username,setUsername] = useState('');
   const [description,setDescription] = useState('');
   const [date, setDate] = useState('0000-00-00');
   const [start_time, setbookTime] = useState('00:00');
   const [end_time, setEndTime] = useState('00:00');
   const [player,setPlayer] = useState(0);
   var id = state.params ? state.params.id : "<undefined>";
+  var sportID = state.params ? state.params.sportID : "<undefined>";
+  var type = state.params ? state.params.type : "<undefined>";
   var width = state.params ? state.params.width : "<undefined>";
   var length = state.params ? state.params.length : "<undefined>";
   var service = state.params ? state.params.service : "<undefined>";
   var holiday = state.params ? state.params.holiday : "<undefined>";
-
 const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 const [isTimePickerVisible2, setTimePickerVisibility2] = useState(false);
+
+useEffect(() => {
+  async function fetchUserData() {
+    let data = await AsyncStorage.getItem('userInfo');
+    let user = await JSON.parse(data);
+    setUsername(user.username);
+  }
+  fetchUserData();
+}, [username])
 
  const showTimePicker = () => {
    setTimePickerVisibility(true);
@@ -43,20 +54,50 @@ const [isTimePickerVisible2, setTimePickerVisibility2] = useState(false);
  };
 
  const dateConfirmHandler = date => {
+   console.log(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate())
    setDate(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
    hideDatePicker();
  };
 
 const timeConfirmHandler = time => {
-   console.log(time.getFullYear() + '-' + (time.getMonth() + 1) + '-' + time.getDate()+ ' ' +time.getHours() + ':' + (time.getMinutes()));
-   setbookTime(time.getHours() + ':' + time.getMinutes() );
+   console.log(time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds());
+   setbookTime(time.getHours() + ':' + time.getMinutes());
    hideTimePicker();
  };
 
-const timeConfirmHandler2 = end => {
-    setEndTime(end.getHours() + ':' + (end.getMinutes()));
+const timeConfirmHandler2 = time => {
+    console.log(time.getHours() + ':' + time.getMinutes() );
+    setEndTime(time.getHours() + ':' + (time.getMinutes()) );
     hideTimePicker2();
 };
+
+
+const handleSubmit = () => {
+    var dateStart = new Date(start_time);
+    var dateEnd = new Date(end_time);
+
+   const data = JSON.stringify({
+       "sportFieldId": sportID,
+       "subFieldId": id,
+       "sportType": type,
+       "startTime": date + 'T' + start_time + ':00',
+       "endTime": date + 'T' + end_time + ':00',
+       "reserveUser": username,
+       "maxPlayer": player,
+       "description": description
+   });
+   fetch('http://senior-project-server.herokuapp.com/match', {
+     method: 'POST',
+     headers: {
+       Accept: 'application/json',
+       'Content-Type': 'application/json',
+     },
+     body: data,
+   });
+   navigation.navigate('Home');
+   console.log(data);
+
+ }
 
   return < View>
   <ScrollView>
@@ -64,32 +105,31 @@ const timeConfirmHandler2 = end => {
   <Text style = {styles.textStyle2}> Field: {id} </Text>
   <Text style = {styles.textStyle2}> Size of the field {width} x {length} </Text>
 
+     <View style= {styles.titleContainer2}>
+     <TouchableOpacity title = "pick the date" onPress={showDatePicker} >
+      <DateTimePickerModal
 
- <View style= {styles.titleContainer2}>
-<TouchableOpacity title = "pick the date" onPress={showDatePicker} >
-  <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        minimumDate={new Date(new Date().getFullYear(), new Date().getMonth(),new Date().getDate())}
+        maximumDate={new Date(2020, 11, 31)}
+        value={date}
+        headerTextIOS = "Booking Time"
+        is24Hour={true}
+        display ="default"
+        onConfirm={dateConfirmHandler}
+        onCancel={hideDatePicker}
+        date={new Date()}
+      />
+      <View style={styles.titleContainer}>
+      <AntDesign name='calendar' size={25} color='#d63447'/>
+      <Text style={styles.textStyle3}>Date </Text>
+      </View>
+      <TextInput value={date} editable={false} style={styles.textStyle2} />
+    </TouchableOpacity>
+    </View>
 
-    isVisible={isDatePickerVisible}
-    mode="date"
-    minimumDate={new Date(new Date().getFullYear(), new Date().getMonth(),new Date().getDate())}
-    maximumDate={new Date(2020, 11, 31)}
-    value={date}
-    headerTextIOS = "Booking Time"
-    is24Hour={true}
-    display ="default"
-    onConfirm={dateConfirmHandler}
-    onCancel={hideDatePicker}
-    date={new Date()}
-  />
-  <View style={styles.titleContainer}>
-  <AntDesign name='calendar' size={25} color='#d63447'/>
-  <Text style={styles.textStyle3}>Date </Text>
-  </View>
-  <TextInput value={date} editable={false} style={styles.textStyle2} />
-</TouchableOpacity>
-</View>
-
-<View style= {styles.titleContainer2}>
+    <View style= {styles.titleContainer2}>
 
     <TouchableOpacity title = "pick the time" onPress={showTimePicker} >
       <DateTimePickerModal
@@ -159,8 +199,7 @@ const timeConfirmHandler2 = end => {
     multiline={true}
     value={description}
     onChangeText={text => setDescription(text)}/>
-
-    <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('Home')}>
+    <TouchableOpacity style = {styles.button} onPress= {handleSubmit}>
     <Text style = {styles.textButton}> Confirm </Text>
     </TouchableOpacity>
 

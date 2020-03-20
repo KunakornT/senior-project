@@ -10,7 +10,6 @@ const HomeScreen = ({ navigation }) => {
 
   const [username, setUsername] = useState(null);
 
-
   useEffect(() => {
     async function fetchUserData() {
       let data = await AsyncStorage.getItem('userInfo');

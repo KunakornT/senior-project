@@ -7,6 +7,8 @@ const SubField = ({navigation}) => {
   const [data, setData] = useState('');
   const [subField, setSubField] = useState('');
   var id = state.params ? state.params.id : "<undefined>";
+  var type = state.params ? state.params.type : "<undefined>";
+
 
 useEffect(() => {
     const fetchSubField = async () => {
@@ -52,7 +54,9 @@ useEffect(() => {
       <Text style = {styles.textStyle2}> Holiday service rate </Text>
       <Text style = {styles.textStyle}> {item.holiday_service_rate} </Text>
       <TouchableOpacity style = {styles.button} onPress={() => navigation.navigate('Form',{
+        sportID: item.sport_field_id,
         id: item.sub_field_id,
+        type,
         width: item.width,
         length: item.length,
         service: item.service_rate,

@@ -23,7 +23,10 @@ const SportsField = ({navigation}) => {
   <Text style = {styles.textStyle}>Sport type: {type} </Text>
   <Text style = {styles.textStyle}>Open time: {openTime} </Text>
   <Text style = {styles.textStyle}>Close time: {closeTime} </Text>
-  <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('Sub',{id})}>
+  <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('Sub',{
+    id,
+    type
+  })}>
   <Text style = {styles.textButton}> Next </Text>
   </TouchableOpacity>
   </View>
