@@ -23,12 +23,20 @@ const SportsField = ({navigation}) => {
   <Text style = {styles.textStyle}>Sport type: {type} </Text>
   <Text style = {styles.textStyle}>Open time: {openTime} </Text>
   <Text style = {styles.textStyle}>Close time: {closeTime} </Text>
+  <View style = {styles.titleContainer2}>
+  <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('Request',{
+    id,
+    name
+  })}>
+  <Text style = {styles.textButton}> Request </Text>
+  </TouchableOpacity>
   <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('Sub',{
     id,
     type
   })}>
   <Text style = {styles.textButton}> Next </Text>
   </TouchableOpacity>
+  </View>
   </View>
 };
 
@@ -74,8 +82,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'white',
     alignSelf: 'center',
-    padding: 10
-  }
+    padding: 10,
+  },
+  titleContainer2: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 5,
+    alignSelf: 'center',
+
+  },
 });
 
 export default SportsField;

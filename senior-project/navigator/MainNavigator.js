@@ -18,6 +18,7 @@ import SportsField from '../screens/user/choose/screens/SportsField';
 import SubField from '../screens/user/choose/screens/SubField';
 import BookingForm from '../screens/user/choose/screens/BookingForm';
 import Event from '../screens/user/event/EventScreen';
+import Request from '../screens/user/choose/Request';
 import {Provider as LocationProvider} from '../context/LocationContext';
 
 const AuthStackNavigation = createStackNavigator({
@@ -43,7 +44,9 @@ const HomeStackNavigation = createStackNavigator({
   Field: SportsField,
   Sub: SubField,
   Form: BookingForm,
-  Event: Event
+  Event: Event,
+  Request: Request,
+  EventInfo: EventInfoScreen
 },
 {
   defaultNavigationOptions: defaultStackNavOption

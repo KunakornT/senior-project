@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Dimensions, Button, ActivityIndicator, Image, TextInput, Alert, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker, Permission, Callout } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, Permission, AnimatedRegion, Animated  } from 'react-native-maps';
 import { requestPermissionsAsync, watchPositionAsync, Accuracy } from 'expo-location';
 //import '../../_mockLocation';
 import { Context as LocationContext } from '../../../context/LocationContext';
@@ -103,13 +103,14 @@ const ChooseSports = ({ navigation }) => {
             title={field.sport_field_name}
             description={field.description}
             onPress= {() => navigation.navigate('Field',{
-              id: field.sport_field_id,
-              description: field.description,
-              name: field.sport_field_name,
-              type: field.sport_type,
-              openTime: field.open_time,
-              closeTime: field.close_time
-            })}
+                id: field.sport_field_id,
+                description: field.description,
+                name: field.sport_field_name,
+                type: field.sport_type,
+                openTime: field.open_time,
+                closeTime: field.close_time
+              })}
+
             coordinate={{
               latitude: field.latitude,
               longitude: field.longtitude
@@ -134,6 +135,12 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     flex: 1,
+  },
+  container2: {
+    backgroundColor: 'red',
+    flex: 1,
+    width: 50,
+    height: 50
   },
   titleContainer: {
     flexDirection: 'row',
