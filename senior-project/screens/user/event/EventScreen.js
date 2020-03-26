@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, AsyncStorage, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, AsyncStorage, FlatList, Dimensions } from 'react-native';
 import SportsFilter from '../../../components/SportsFilter';
 import ComingSports from '../../../components/ComingSports';
 import HistorySports from '../../../components/HistorySports';
@@ -11,6 +11,7 @@ const EventScreen = (props) => {
 
   const [userId, setUserId] = useState();
   const [event, setEvent] = useState();
+  const [historyEvent, setHistoryEvent] = useState();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -24,17 +25,30 @@ const EventScreen = (props) => {
     fetchUser();
   }, [])
 
+  const fetchEvent = async () => {
+    try {
+      const response = await fetch(url.url_user_event + '/' + userId);
+      const responseJson = await response.json();
+      setEvent(responseJson);
+      console.log(responseJson);
+    } catch (e) {
+    }
+  }
   useEffect(() => {
-    const fetchEvent = async () => {
+    fetchEvent();
+  }, [userId])
+
+  useEffect(() => {
+    const fetchHistoryEvent = async () => {
       try {
-        const response = await fetch(url.url_user_event + '/' + userId);
+        const response = await fetch(url.url_user_history_event + '/' + userId);
         const responseJson = await response.json();
-        setEvent(responseJson);
+        setHistoryEvent(responseJson);
         console.log(responseJson);
       } catch (e) {
       }
     }
-    fetchEvent();
+    fetchHistoryEvent();
   }, [userId])
 
   return <View>
@@ -42,35 +56,40 @@ const EventScreen = (props) => {
       <Text style={styles.textStyle}> Your Events </Text>
       <SportsFilter />
       <Text style={styles.textStyle2}> Coming Events </Text>
+      {(event === undefined || event.length == 0) && <Text style={styles.text}>No Coming Event</Text>}
       {event && event.map((item, index) => {
-         if(new Date(item.end_time) > new Date()){
-          return <ComingSports 
-          key={item.match_id} 
-          item = {item}
-          navigation = {navigator}
-          imageSource={require('../../../assets/football.jpg')}
-          onViewInfo={() => {
-            props.navigation.navigate('Information', {
-              information: item
-            })
-          }}/>
+        if (new Date(item.end_time) > new Date()) {
+          return <ComingSports
+            key={item.match_id}
+            item={item}
+            navigation={navigator}
+            imageSource={require('../../../assets/football.jpg')}
+            onViewInfo={() => {
+              props.navigation.navigate('Information', {
+                information: item
+              })
+            }}
+            onDelete={() => {
+              fetchEvent()
+            }} />
         }
       })}
       {/* <ComingSports title="Futsal Park RAMA II"
         imageSource={require('../../../assets/football.jpg')} /> */}
       <Text style={styles.textStyle2}> History </Text>
-      {event && event.map((item, index) => {
-         if(new Date(item.end_time) < new Date()){
-          return <ComingSports 
-          key={item.match_id} 
-          item = {item}
-          navigation = {navigator}
-          imageSource={require('../../../assets/football.jpg')}
-          onViewInfo={() => {
-            props.navigation.navigate('Information', {
-              information: item
-            })
-          }}/>
+      {(historyEvent === undefined || historyEvent.length == 0) && <Text style={styles.text}>No History Event</Text>}
+      {historyEvent && historyEvent.map((item, index) => {
+        if (new Date(item.end_time) < new Date()) {
+          return <HistorySports
+            key={item.match_id}
+            item={item}
+            navigation={navigator}
+            imageSource={require('../../../assets/football.jpg')}
+            onViewInfo={() => {
+              props.navigation.navigate('Information', {
+                information: item
+              })
+            }} />
         }
       })}
       {/* <HistorySports title="Futsal Park RAMA II"
@@ -99,7 +118,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     margin: 10,
     fontWeight: 'bold'
+  },
+  text: {
+    fontSize: 18,
+    textAlign: 'center'
   }
+  
 });
 
 export default EventScreen;
