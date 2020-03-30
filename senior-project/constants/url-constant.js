@@ -14,4 +14,5 @@ export default{
   url_user_event: url+'/user-event',
   url_user_history_event: url+'/user-history-event', 
   url_unjoin: url+'/match-user',
+  url_match_user: url + '/match-user'
 }
