@@ -65,6 +65,12 @@ const EventScreen = (props) => {
     wait(2000).then(() => setRefreshing(false));
   }, [refreshing]);
 
+  const handleUnjoin = (itemId) => {
+    const events = event.filter(item => item.id !== itemId);
+    setEvent(events);
+    fetchEvent();
+  }
+
   return <View>
     <ScrollView 
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
@@ -85,7 +91,7 @@ const EventScreen = (props) => {
               })
             }}
             onDelete={() => {
-              fetchEvent()
+              handleUnjoin()
             }} />
         }
       })}
