@@ -38,7 +38,7 @@ const EventScreen = (props) => {
       const response = await fetch(url.url_user_event + '/' + userId);
       const responseJson = await response.json();
       setEvent(responseJson);
-      console.log(responseJson);
+      // console.log(responseJson);
     } catch (e) {
     }
   }
@@ -52,7 +52,7 @@ const EventScreen = (props) => {
         const response = await fetch(url.url_user_history_event + '/' + userId);
         const responseJson = await response.json();
         setHistoryEvent(responseJson);
-        console.log(responseJson);
+        // console.log(responseJson);
       } catch (e) {
       }
     }
@@ -66,7 +66,7 @@ const EventScreen = (props) => {
   }, [refreshing]);
 
   const handleUnjoin = (itemId) => {
-    const events = event.filter(item => item.id !== itemId);
+    const events = event.filter(item => item.match_id !== itemId);
     setEvent(events);
     fetchEvent();
   }
@@ -90,9 +90,7 @@ const EventScreen = (props) => {
                 information: item
               })
             }}
-            onDelete={() => {
-              handleUnjoin()
-            }} />
+            onDelete={handleUnjoin} />
         }
       })}
       {/* <ComingSports title="Futsal Park RAMA II"

@@ -59,7 +59,7 @@ const ComingSports = (props) => {
     } catch(e) {
       console.log(e)
     }
-    props.onDelete(props.match_id)
+    props.onDelete(props.item.match_id)
   }
 
   const date = new Date(props.item.start_time).getUTCDate();
