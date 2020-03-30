@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ImageBackground, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ImageBackground, Dimensions, TouchableOpacity, Platform } from 'react-native';
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize"; 
 
 import Card from './Card';
 import Color from '../constants/Colors'
@@ -45,7 +46,8 @@ const HistorySports = (props) => {
 const styles = StyleSheet.create({
   card: {
     padding: 0,
-    height: Dimensions.get('window').height / 4,
+    minHeight: Platform.OS == 'ios' ? 220 : 230, 
+    height: Platform.OS == 'ios' ? Dimensions.get('window').height / 4 : Dimensions.get('window').height / 3,
     width: '90%'
   },
   imageContainer: {

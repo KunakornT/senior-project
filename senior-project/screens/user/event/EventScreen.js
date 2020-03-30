@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, AsyncStorage, FlatList, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, AsyncStorage, FlatList, Dimensions, RefreshControl } from 'react-native';
+import Constants from 'expo-constants';
+
 import SportsFilter from '../../../components/SportsFilter';
 import ComingSports from '../../../components/ComingSports';
 import HistorySports from '../../../components/HistorySports';
-
 import url from '../../../constants/url-constant';
 
 
@@ -12,6 +13,13 @@ const EventScreen = (props) => {
   const [userId, setUserId] = useState();
   const [event, setEvent] = useState();
   const [historyEvent, setHistoryEvent] = useState();
+  const [refreshing, setRefreshing] = useState(false);
+
+  function wait(timeout) {
+    return new Promise(resolve => {
+      setTimeout(resolve, timeout);
+    });
+  }
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -51,8 +59,15 @@ const EventScreen = (props) => {
     fetchHistoryEvent();
   }, [userId])
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchEvent();
+    wait(2000).then(() => setRefreshing(false));
+  }, [refreshing]);
+
   return <View>
-    <ScrollView>
+    <ScrollView 
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
       <Text style={styles.textStyle}> Your Events </Text>
       <SportsFilter />
       <Text style={styles.textStyle2}> Coming Events </Text>
@@ -123,7 +138,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center'
   }
-  
+
 });
 
 export default EventScreen;

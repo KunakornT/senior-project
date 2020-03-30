@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ImageBackground, Dimensions, TouchableOpacity, AsyncStorage, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, ImageBackground, Dimensions, TouchableOpacity, AsyncStorage, Alert, Platform } from 'react-native';
 
 import url from '../constants/url-constant'
 import Card from './Card';
@@ -102,7 +102,8 @@ const ComingSports = (props) => {
 const styles = StyleSheet.create({
   card: {
     padding: 0,
-    height: Dimensions.get('window').height / 4,
+    minHeight: Platform.OS == 'ios' ? 220 : 230, 
+    height: Platform.OS == 'ios' ? Dimensions.get('window').height / 4 : Dimensions.get('window').height / 3,
     width: '90%'
   },
   imageContainer: {
