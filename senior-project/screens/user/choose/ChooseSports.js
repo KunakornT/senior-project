@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Text, View, StyleSheet, Dimensions, Button, ActivityIndicator, Image, TextInput, Alert, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView,StyleSheet, Dimensions, Button, ActivityIndicator, Image, TextInput, Alert, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Permission, AnimatedRegion, Animated  } from 'react-native-maps';
 import { requestPermissionsAsync, watchPositionAsync, Accuracy } from 'expo-location';
 //import '../../_mockLocation';
@@ -76,13 +76,7 @@ const ChooseSports = ({ navigation }) => {
   }
   return (
     <View style={styles.container}>
-      <Card>
-        <View style={styles.titleContainer}>
-          <Ionicons name='ios-search' size={25} />
-          <TextInput style={styles.text} />
-        </View>
-      </Card>
-      <Text style = {styles.normalText}>Click on a ball to select the sport field</Text>
+      <Text style = {styles.normalText}>Click on a ball to select nearby field</Text>
       <MapView style={styles.mapStyle}
         provider={PROVIDER_GOOGLE}
         showUserLocation={true}
@@ -128,6 +122,16 @@ const ChooseSports = ({ navigation }) => {
           />
         </Marker>
       </MapView>
+      <View style= {styles.titleContainer2}>
+      <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('AllFields')}>
+      <Text style = {styles.textButton}> All Fields </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('AllEvents')}>
+      <Text style = {styles.textButton}> All Events </Text>
+      </TouchableOpacity>
+
+      </View>
     </View>);
 };
 
@@ -139,8 +143,8 @@ const styles = StyleSheet.create({
   container2: {
     backgroundColor: 'red',
     flex: 1,
-    width: 50,
-    height: 50
+    width: '50%',
+    height: '50%'
   },
   titleContainer: {
     flexDirection: 'row',
@@ -155,8 +159,11 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   mapStyle: {
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width,
+    height: '85%',
+    width: '97%',
+    borderWidth: 1,
+    marginLeft: 7,
+    marginRight: 7
   },
   headText: {
     fontSize: 25,
@@ -180,8 +187,28 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     alignSelf: 'center',
     marginBottom: 10,
-    color: '#FFA64B'
+    color: 'black',
+    margin: 10,
   },
+    button:{
+      borderRadius: 50,
+      borderWidth: 2,
+      margin:5,
+      backgroundColor: '#FFA64B',
+      borderColor: 'white'
+    },
+    textButton:{
+      fontSize: 20,
+      color: 'white',
+      alignSelf: 'center',
+      padding: 10,
+    },
+    titleContainer2: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      margin: 5,
+      alignSelf: 'center',
+    },
 });
 
 export default ChooseSports;

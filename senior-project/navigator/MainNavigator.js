@@ -17,6 +17,8 @@ import Colors from '../constants/Colors';
 import SportsField from '../screens/user/choose/screens/SportsField';
 import SubField from '../screens/user/choose/screens/SubField';
 import BookingForm from '../screens/user/choose/screens/BookingForm';
+import AllEvents from '../screens/user/choose/screens/AllEvents';
+import AllFields from '../screens/user/choose/screens/AllFields';
 import Event from '../screens/user/event/EventScreen';
 import Request from '../screens/user/choose/Request';
 import {Provider as LocationProvider} from '../context/LocationContext';
@@ -46,7 +48,9 @@ const HomeStackNavigation = createStackNavigator({
   Form: BookingForm,
   Event: Event,
   Request: Request,
-  EventInfo: EventInfoScreen
+  EventInfo: EventInfoScreen,
+  AllEvents: AllEvents,
+  AllFields: AllFields
 },
 {
   defaultNavigationOptions: defaultStackNavOption

@@ -28,7 +28,7 @@ const SportsField = ({navigation}) => {
     id,
     name
   })}>
-  <Text style = {styles.textButton}> Request </Text>
+  <Text style = {styles.textButton}> Event </Text>
   </TouchableOpacity>
   <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('Sub',{
     id,

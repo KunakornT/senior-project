@@ -16,7 +16,6 @@ useEffect(() => {
         method: 'GET'
       });
       const data = await response.json();
-      console.log("This is sub 2")
       console.log(data)
       if (!response.ok) {
         Alert.alert(
@@ -34,11 +33,11 @@ useEffect(() => {
 
 
 
-  return <View>
-  <Text style = {styles.headText}> Select the field</Text>
+  return (
+  <View>
   <FlatList
   data = {subField}
-  keyExtractor = {(item) => {item.id}}
+  keyExtractor = {(subField) => {subField.id}}
   renderItem= {({item}) => {
     return <View>
       <ScrollView>
@@ -69,6 +68,7 @@ useEffect(() => {
       </View>
   }}/>
   </View>
+)
 };
 
 

@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import {View,Text,StyleSheet,TextInput,Button,TouchableOpacity, ScrollView,Slider,AsyncStorage} from 'react-native';
+import {View,Text,Alert,StyleSheet,TextInput,Button,TouchableOpacity, ScrollView,Slider,AsyncStorage} from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {MaterialIcons,AntDesign} from '@expo/vector-icons';
 import url from '../../../../constants/url-constant';
@@ -8,10 +8,10 @@ const BookingForm = ({navigation,props}) => {
   const {state} = navigation;
   const [username,setUsername] = useState('');
   const [description,setDescription] = useState('');
-  const [date, setDate] = useState('0000-00-00');
-  const [start_time, setbookTime] = useState('00:00');
-  const [end_time, setEndTime] = useState('00:00');
-  const [player,setPlayer] = useState(0);
+  const [date, setDate] = useState('');
+  const [start_time, setbookTime] = useState('');
+  const [end_time, setEndTime] = useState('');
+  const [player,setPlayer] = useState('0');
   var id = state.params ? state.params.id : "<undefined>";
   var sportID = state.params ? state.params.sportID : "<undefined>";
   var type = state.params ? state.params.type : "<undefined>";
@@ -72,10 +72,28 @@ const timeConfirmHandler2 = time => {
 };
 
 
-const handleSubmit = () => {
-    var dateStart = new Date(start_time);
-    var dateEnd = new Date(end_time);
+const inputValidation = () => {
+    if (date.trim() === '' || start_time.trim() === '' || end_time.trim() === '') {
+      return false;
+    }
+    else{
+      return true;
+    }
+  };
 
+const handleSubmit = () => {
+      var dateStart = new Date(start_time);
+      var dateEnd = new Date(end_time);
+
+    if (inputValidation() === false) {
+      Alert.alert(
+        'Invalid Input',
+        'Must specific all fields',
+        [{ text: 'OK', style: 'destructive'}]
+      );
+      return;
+    }
+    else {
    const data = JSON.stringify({
        "sportFieldId": sportID,
        "subFieldId": id,
@@ -96,6 +114,7 @@ const handleSubmit = () => {
    });
    navigation.navigate('Home');
    console.log(data);
+  }
 
  }
 
