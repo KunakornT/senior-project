@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   mapStyle: {
-    height: '85%',
+    height: '80%',
     width: '97%',
     borderWidth: 1,
     marginLeft: 7,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       margin: 5,
-      alignSelf: 'center',
+      alignSelf: 'center'
     },
 });
 

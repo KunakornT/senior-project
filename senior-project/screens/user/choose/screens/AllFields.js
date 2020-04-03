@@ -53,7 +53,7 @@ console.log(term);
    </Card>
   <FlatList
   data = {allField}
-  keyExtractor = {(allField) => {allField.sport_field_name}}
+  keyExtractor = {(item) => {item.id}}
   renderItem= {({item}) => {
     return <View>
       <ScrollView>

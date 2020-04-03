@@ -11,14 +11,13 @@ const BookingForm = ({navigation,props}) => {
   const [date, setDate] = useState('');
   const [start_time, setbookTime] = useState('');
   const [end_time, setEndTime] = useState('');
-  const [player,setPlayer] = useState('0');
+  const [player,setPlayer] = useState(0);
   var id = state.params ? state.params.id : "<undefined>";
   var sportID = state.params ? state.params.sportID : "<undefined>";
   var type = state.params ? state.params.type : "<undefined>";
   var width = state.params ? state.params.width : "<undefined>";
   var length = state.params ? state.params.length : "<undefined>";
-  var service = state.params ? state.params.service : "<undefined>";
-  var holiday = state.params ? state.params.holiday : "<undefined>";
+
 const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 const [isTimePickerVisible2, setTimePickerVisibility2] = useState(false);
@@ -144,7 +143,10 @@ const handleSubmit = () => {
       <AntDesign name='calendar' size={25} color='#d63447'/>
       <Text style={styles.textStyle3}>Date </Text>
       </View>
-      <TextInput value={date} editable={false} style={styles.textStyle2} />
+      <TextInput value={date}
+      editable={false}
+      style={styles.textStyle2}
+      placeholder = '0000-00-00' />
     </TouchableOpacity>
     </View>
 
@@ -169,7 +171,10 @@ const handleSubmit = () => {
       <MaterialIcons name='timer' size={25} color='#d63447'/>
       <Text style={styles.textStyle3}>Start Time </Text>
       </View>
-      <TextInput value={start_time} editable={false} style={styles.textStyle2} />
+      <TextInput value={start_time}
+      editable={false}
+      style={styles.textStyle2}
+      placeholder = "00:00"/>
     </TouchableOpacity>
 
 
@@ -191,7 +196,11 @@ const handleSubmit = () => {
       <MaterialIcons name='timer-off' size={25} color='#d63447'/>
       <Text style={styles.textStyle3}>End Time </Text>
       </View>
-      <TextInput value={end_time} editable={false} style={styles.textStyle2} />
+      <TextInput
+      value={end_time}
+      editable={false}
+      style={styles.textStyle2}
+      placeholder="00:00" />
     </TouchableOpacity>
     </View>
 

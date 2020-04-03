@@ -37,7 +37,7 @@ useEffect(() => {
   <View>
   <FlatList
   data = {subField}
-  keyExtractor = {(subField) => {subField.id}}
+  keyExtractor = {(item) => {item.id}}
   renderItem= {({item}) => {
     return <View>
       <ScrollView>
