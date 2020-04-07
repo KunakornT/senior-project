@@ -117,6 +117,36 @@ const handleSubmit = () => {
 
  }
 
+ const viewSchedule = async () => {
+   try {
+   const response = await fetch(url.url_sub_field+'/'+id, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "date": date + 'T' + '00:00:00' 
+      })
+    });
+    const scheduleData = await response.json();
+    navigation.navigate('Schedule', {
+      data: scheduleData
+    });
+    if (!response.ok) {
+      Alert.alert(
+        'Error',
+        data.message,
+        [{ text: 'OK', style: 'destructive' }]
+      )
+      return;
+    }
+   } catch(e) {
+
+   }
+  
+ }
+
   return < View>
   <ScrollView>
   <Text style= {styles.header}> Booking Information </Text>
@@ -143,10 +173,15 @@ const handleSubmit = () => {
       <AntDesign name='calendar' size={25} color='#d63447'/>
       <Text style={styles.textStyle3}>Date </Text>
       </View>
+      <View style={{flexDirection: 'row'}}>
       <TextInput value={date}
       editable={false}
       style={styles.textStyle2}
       placeholder = '0000-00-00' />
+      <TouchableOpacity style = {styles.viewScheduleButton} onPress={viewSchedule}>
+      <Text style = {styles.textViewScheduleButton}> View Schedule </Text>
+      </TouchableOpacity>
+      </View>
     </TouchableOpacity>
     </View>
 
@@ -333,20 +368,33 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   button:{
-      borderRadius: 50,
-      borderWidth: 2,
-      alignSelf: 'center',
-      margin:10,
-      backgroundColor: '#FFA64B',
-      borderColor: 'white'
-    },
-    textButton:{
-      fontSize: 20,
-      color: 'white',
-      alignSelf: 'center',
-      padding: 10
-    }
-
+    borderRadius: 50,
+    borderWidth: 2,
+    alignSelf: 'center',
+    margin:10,
+    backgroundColor: '#FFA64B',
+    borderColor: 'white'
+  },
+  viewScheduleButton:{
+    borderRadius: 50,
+    borderWidth: 2,
+    alignSelf: 'center',
+    margin:10,
+    backgroundColor: '#1ec71e',
+    borderColor: 'white'
+  },
+  textButton:{
+    fontSize: 20,
+    color: 'white',
+    alignSelf: 'center',
+    padding: 10
+  },
+  textViewScheduleButton:{
+    fontSize: 16,
+    color: 'white',
+    alignSelf: 'center',
+    padding: 10
+  }
 });
 
 export default BookingForm;

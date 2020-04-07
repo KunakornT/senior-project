@@ -35,8 +35,8 @@ const ComingSports = (props) => {
       'Unjoin event',
       'Do you want to unjoin an event',
       [
-        {text: 'Confirm', onPress: () => unJoinMatch()},
-        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        { text: 'Confirm', onPress: () => unJoinMatch() },
+        { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
       ],
       { cancelable: false }
     )
@@ -47,7 +47,7 @@ const ComingSports = (props) => {
       "matchId": props.item.match_id,
       "userId": userId
     });
-    try{
+    try {
       fetch(url.url_unjoin, {
         method: 'DELETE',
         headers: {
@@ -56,7 +56,7 @@ const ComingSports = (props) => {
         },
         body: data,
       });
-    } catch(e) {
+    } catch (e) {
       console.log(e)
     }
     props.onDelete(props.item.match_id)
@@ -102,7 +102,7 @@ const ComingSports = (props) => {
 const styles = StyleSheet.create({
   card: {
     padding: 0,
-    minHeight: Platform.OS == 'ios' ? 220 : 230, 
+    minHeight: Platform.OS == 'ios' ? 220 : 230,
     height: Platform.OS == 'ios' ? Dimensions.get('window').height / 4 : Dimensions.get('window').height / 3,
     width: '90%'
   },

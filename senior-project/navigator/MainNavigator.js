@@ -17,6 +17,7 @@ import Colors from '../constants/Colors';
 import SportsField from '../screens/user/choose/screens/SportsField';
 import SubField from '../screens/user/choose/screens/SubField';
 import BookingForm from '../screens/user/choose/screens/BookingForm';
+import Schedule from '../screens/user/choose/screens/Schedule';
 import AllEvents from '../screens/user/choose/screens/AllEvents';
 import AllFields from '../screens/user/choose/screens/AllFields';
 import Event from '../screens/user/event/EventScreen';
@@ -46,6 +47,7 @@ const HomeStackNavigation = createStackNavigator({
   Field: SportsField,
   Sub: SubField,
   Form: BookingForm,
+  Schedule: Schedule,
   Event: Event,
   Request: Request,
   EventInfo: EventInfoScreen,
