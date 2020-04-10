@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Alert, AsyncStorage } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import * as Google from 'expo-google-app-auth';
 
 import url from '../../constants/url-constant';
 import Card from '../../components/Card';
@@ -79,6 +80,7 @@ const LoginScreen = props => {
               props.navigation.navigate('Verification');
             }
             else{
+              console.log(data)
               AsyncStorage.setItem('userInfo', JSON.stringify(data));
               AsyncStorage.setItem('isLoggedIn', 'true');
               props.navigation.navigate('Home');
@@ -90,6 +92,25 @@ const LoginScreen = props => {
         })
     }
   };
+
+  async function signInWithGoogleAsync() {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: '183581867664-cbisp9llbkr18ipnfvi87mjit4nt60kp.apps.googleusercontent.com',
+        iosClientId: '183581867664-mnsfeghc89vt9t8k7fhrui14iuik012b.apps.googleusercontent.com',
+        scopes: ['profile', 'email'],
+      });
+  
+      if (result.type === 'success') {
+        console.log(result)
+        return result.accessToken;
+      } else {
+        return { cancelled: true };
+      }
+    } catch (e) {
+      return { error: true };
+    }
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -120,6 +141,9 @@ const LoginScreen = props => {
             <Text style={{ color: 'red' }}>Create a new account</Text>
           </TouchableOpacity>
         </View>
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button title='Sign in with Google' onPress={signInWithGoogleAsync} color='#BF180A'></Button>
       </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
