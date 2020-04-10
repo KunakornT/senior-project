@@ -18,28 +18,19 @@ const Schedule = props => {
 
   return (
     <View>
-      <Text style={styles.header}>Schedule</Text>
+      {/* <Text style={styles.header}>Schedule</Text> */}
       {scheduleData && (
         <View style={styles.tableContainer}>
-          <View style={styles.rowContainer}>
-            <Text style={styles.tableText}>reserve user</Text>
-          </View>
-          <View style={styles.rowContainer}>
-            <Text style={styles.tableText}>Time</Text>
-          </View>
+          <Text style={styles.tableHeaderText}>Reserve user</Text>
+          <Text style={styles.tableHeaderText}>Time</Text>
         </View>)}
       {scheduleData && scheduleData.map((item, index) => {
         return (
-          <View style={styles.tableContainer}>
-            <View style={styles.rowContainer}>
-              <Text style={styles.tableText}>{item.reserve_user}</Text>
-            </View>
-            <View style={styles.rowContainer}>
-              <Text style={styles.tableText}>
-                {addZero(new Date(item.start_time).getUTCHours())}:{addZero(new Date(item.start_time).getUTCMinutes())}-
-                {addZero(new Date(item.end_time).getUTCHours())}:{addZero(new Date(item.end_time).getUTCMinutes())}
-              </Text>
-            </View>
+          <View style={styles.tableContainer} key={item.start_time}>
+            <Text style={styles.tableText}>{item.reserve_user}</Text>
+            <Text style={styles.tableText}>
+              {addZero(new Date(item.start_time).getUTCHours())}:{addZero(new Date(item.start_time).getUTCMinutes())} - {addZero(new Date(item.end_time).getUTCHours())}:{addZero(new Date(item.end_time).getUTCMinutes())}
+            </Text>
           </View>
         )
       })}
@@ -50,22 +41,23 @@ const Schedule = props => {
 const styles = StyleSheet.create({
   header: {
     textAlign: 'center',
-    fontSize: Dimensions.get('window').height / 50,
+    fontSize: Dimensions.get('window').height / 40,
     marginVertical: 10
   },
   tableContainer: {
     flexDirection: 'row',
-    marginHorizontal: 5,
-    padding: 5
+    justifyContent: 'flex-start',
+    width: '100%',
+    marginHorizontal: Dimensions.get('window').width/10,
+    marginTop: Dimensions.get('window').width/30,
   },
-  rowContainer: {
-    width: '50%',
-    borderColor: 'black',
-    borderWidth: 1,
-    padding: 5
+  tableHeaderText: {
+    fontSize: Dimensions.get('window').height / 45,
+    width: '50%'
   },
   tableText: {
-    fontSize: Dimensions.get('window').height / 60
+    width: '50%',
+    fontSize: Dimensions.get('window').height / 50
   }
 })
 
