@@ -70,7 +70,14 @@ const timeConfirmHandler2 = time => {
     hideTimePicker2();
 };
 
-
+const endTime = () => {
+  if (end_time.trim() === start_time || end_time.trim() < start_time) {
+    return false;
+  }
+  else{
+    return true;
+  }
+}
 const inputValidation = () => {
     if (date.trim() === '' || start_time.trim() === '' || end_time.trim() === '') {
       return false;
@@ -88,6 +95,14 @@ const handleSubmit = () => {
       Alert.alert(
         'Invalid Input',
         'Must specific all fields',
+        [{ text: 'OK', style: 'destructive'}]
+      );
+      return;
+    }
+    else if (endTime() === false) {
+      Alert.alert(
+        'Invalid Input',
+        'Please select the end time correctly ',
         [{ text: 'OK', style: 'destructive'}]
       );
       return;
@@ -126,7 +141,7 @@ const handleSubmit = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        "date": date + 'T' + '00:00:00' 
+        "date": date + 'T' + '00:00:00'
       })
     });
     const scheduleData = await response.json();
@@ -144,7 +159,7 @@ const handleSubmit = () => {
    } catch(e) {
 
    }
-  
+
  }
 
   return < View>

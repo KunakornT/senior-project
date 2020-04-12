@@ -11,12 +11,12 @@ const AllFields = ({navigation}) => {
   const [allField, setAllField] = useState('');
   const [term,setTerm] = useState('');
   const [errorMessage,setError] = useState('');
+  const [newData,setnewData] = useState('');
 
   const fetchSportField = async (term) => {
     try{
       const response = await fetch(`http://senior-project-server.herokuapp.com/sport-field`,{
-        method: 'GET',
-        sport_field_name: term
+        method: 'GET'
         }
       );
       const data = await response.json();
@@ -32,6 +32,15 @@ useEffect(() => {
   fetchSportField();
 }, []);
 
+const searchFilterFunction = term => {
+  const filter = allField.filter(item => {
+    const itemData = `${item.sport_field_name.toUpperCase()}`;
+     const textData = term.toUpperCase();
+     return itemData.indexOf(textData) > -1;
+  });
+  setAllField(filter);
+};
+
 console.log(term);
 
 
@@ -46,14 +55,15 @@ console.log(term);
        autoCorrect = {false}
        placeholder="Search"
        value={term}
-       onChangeText= {newTerm => setTerm(newTerm)}
-       onEndEditing = {() => fetchSportField(term)}
+       onChangeText= {term => setTerm(term)}
+       onEndEditing = {() => searchFilterFunction(term)}
        />
      </View>
    </Card>
+
   <FlatList
   data = {allField}
-  keyExtractor = {(item) => {item.id}}
+  keyExtractor = {(item) => {item.sport_field_name}}
   renderItem= {({item}) => {
     return <View>
       <ScrollView>
@@ -72,7 +82,9 @@ console.log(term);
         </View>
         </ScrollView>
       </View>
-  }}/>
+  }}
+  />
+
   </View>
 )
 };
