@@ -13,7 +13,7 @@ const AllFields = ({navigation}) => {
   const [errorMessage,setError] = useState('');
   const [newData,setnewData] = useState('');
 
-  const fetchSportField = async (term) => {
+  const fetchSportField = async () => {
     try{
       const response = await fetch(`http://senior-project-server.herokuapp.com/sport-field`,{
         method: 'GET'

@@ -1,12 +1,11 @@
 import React,{useState,useEffect} from 'react';
-import {View,Text,Alert,StyleSheet,TextInput,Button,TouchableOpacity, ScrollView,Slider,AsyncStorage} from 'react-native';
+import {View,Text,Alert,StyleSheet,TextInput,Button,TouchableOpacity, ScrollView,Slider} from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {MaterialIcons,AntDesign} from '@expo/vector-icons';
 import url from '../../../../constants/url-constant';
 
 const BookingForm = ({navigation,props}) => {
   const {state} = navigation;
-  const [username,setUsername] = useState('');
   const [description,setDescription] = useState('');
   const [date, setDate] = useState('');
   const [start_time, setbookTime] = useState('');
@@ -21,15 +20,6 @@ const BookingForm = ({navigation,props}) => {
 const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 const [isTimePickerVisible2, setTimePickerVisibility2] = useState(false);
-
-useEffect(() => {
-  async function fetchUserData() {
-    let data = await AsyncStorage.getItem('userInfo');
-    let user = await JSON.parse(data);
-    setUsername(user.username);
-  }
-  fetchUserData();
-}, [username])
 
  const showTimePicker = () => {
    setTimePickerVisibility(true);
@@ -108,26 +98,16 @@ const handleSubmit = () => {
       return;
     }
     else {
-   const data = JSON.stringify({
-       "sportFieldId": sportID,
-       "subFieldId": id,
-       "sportType": type,
-       "startTime": date + 'T' + start_time + ':00',
-       "endTime": date + 'T' + end_time + ':00',
-       "reserveUser": username,
-       "maxPlayer": player,
-       "description": description
-   });
-   fetch('http://senior-project-server.herokuapp.com/match', {
-     method: 'POST',
-     headers: {
-       Accept: 'application/json',
-       'Content-Type': 'application/json',
-     },
-     body: data,
-   });
-   navigation.navigate('Home');
-   console.log(data);
+   navigation.navigate('ConfirmBooking',{
+       sportID,
+       id,
+       type,
+       date,
+       start_time,
+       end_time,
+       player,
+       description
+     })
   }
 
  }
@@ -277,8 +257,8 @@ const handleSubmit = () => {
     multiline={true}
     value={description}
     onChangeText={text => setDescription(text)}/>
-    <TouchableOpacity style = {styles.button} onPress= {handleSubmit}>
-    <Text style = {styles.textButton}> Confirm </Text>
+    <TouchableOpacity style = {styles.button} onPress = {handleSubmit}>
+    <Text style = {styles.textButton}> Next </Text>
     </TouchableOpacity>
 
   </ScrollView>

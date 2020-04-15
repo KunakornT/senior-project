@@ -22,6 +22,7 @@ import AllEvents from '../screens/user/choose/screens/AllEvents';
 import AllFields from '../screens/user/choose/screens/AllFields';
 import Event from '../screens/user/event/EventScreen';
 import Request from '../screens/user/choose/Request';
+import ConfirmBooking from '../screens/user/choose/screens/ConfirmBooking';
 import {Provider as LocationProvider} from '../context/LocationContext';
 
 const AuthStackNavigation = createStackNavigator({
@@ -52,7 +53,8 @@ const HomeStackNavigation = createStackNavigator({
   Request: Request,
   EventInfo: EventInfoScreen,
   AllEvents: AllEvents,
-  AllFields: AllFields
+  AllFields: AllFields,
+  ConfirmBooking: ConfirmBooking
 },
 {
   defaultNavigationOptions: defaultStackNavOption
