@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Alert, AsyncStorage } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Alert, AsyncStorage,AppRegistry } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Google from 'expo-google-app-auth';
-
+import * as Facebook from 'expo-facebook';
 import url from '../../constants/url-constant';
 import Card from '../../components/Card';
 
@@ -100,7 +100,7 @@ const LoginScreen = props => {
         iosClientId: '183581867664-mnsfeghc89vt9t8k7fhrui14iuik012b.apps.googleusercontent.com',
         scopes: ['profile', 'email'],
       });
-  
+
       if (result.type === 'success') {
         console.log(result)
         return result.accessToken;
@@ -109,6 +109,26 @@ const LoginScreen = props => {
       }
     } catch (e) {
       return { error: true };
+    }
+  }
+
+
+  async function signInWithFacebook() {
+
+    try {
+      await Facebook.initializeAsync('1865783786890133');
+      const {type,token, expires,permissions,declinedPermissions} =
+      await Facebook.logInWithReadPermissionsAsync('1865783786890133', {
+        permissions: ['public_profile','email'],
+      });
+      if (type === 'success') {
+        const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+        Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+      } else {
+        Alert.alert('Something is wrong !');
+      }
+    } catch ({ message }) {
+      Alert.alert(`Facebook Login Error: ${message}`);
     }
   }
 
@@ -144,6 +164,9 @@ const LoginScreen = props => {
       </View>
       <View style={styles.buttonContainer}>
         <Button title='Sign in with Google' onPress={signInWithGoogleAsync} color='#BF180A'></Button>
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button title='Sign in with Facebook' onPress={signInWithFacebook} color='#BF180A'></Button>
       </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
