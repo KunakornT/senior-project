@@ -3,10 +3,11 @@ import { View, Text, Image, StyleSheet, TextInput, Button, TouchableOpacity, Asy
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { AntDesign } from '@expo/vector-icons';
 
 import url from '../../../constants/url-constant';
 import Color from '../../../constants/Colors';
-import { AntDesign } from '@expo/vector-icons';
 
 const ProfileScreen = props => {
   const [id, setId] = useState(0);
@@ -17,8 +18,8 @@ const ProfileScreen = props => {
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [isEdit, setIsEdit] = useState(false);
-  const [imageUrl, setImageUrl] = useState('');
-
+  const [imageUrl, setImageUrl] = useState(null);
+  const [spinner, setSpinner] = useState(false);
 
   function getAge(dateString) {
     var today = new Date();
@@ -42,8 +43,16 @@ const ProfileScreen = props => {
     setGender(user.gender);
     setEmail(user.email);
     setId(user.user_id)
-    setImageUrl(user.profile_picture)
   }
+
+  useEffect(() => {
+    async function fetchUserPicData() {
+      let pic = await AsyncStorage.getItem('profile_picture');
+      let userPic = await JSON.parse(pic);
+      setImageUrl(userPic.profile_picture)
+    }
+    fetchUserPicData()
+  }, [imageUrl])
 
   useEffect(() => {
     // console.log(url.url_users_fetch_picture)
@@ -153,6 +162,7 @@ const ProfileScreen = props => {
       return;
     }
     else {
+      setSpinner(true)
       let localUri = result.uri;
       let filename = localUri.split('/').pop();
       let match = /\.(\w+)$/.exec(filename);
@@ -172,16 +182,16 @@ const ProfileScreen = props => {
         Alert.alert(
           'Error',
           data.message,
-          [{ text: 'OK', style: 'destructive' }]
+          [{ text: 'OK', onPress: () => setSpinner(false), style: 'destructive' }]
         );
       }
       else {
         Alert.alert(
           'Success',
           data.message,
-          [{ text: 'OK', style: 'destructive' }]
+          [{ text: 'OK', onPress: () => setSpinner(false), style: 'destructive' }]
         );
-        AsyncStorage.setItem('userInfo', JSON.stringify(data.data));
+        await AsyncStorage.setItem('profile_picture', JSON.stringify(data.data));
         setImageUrl(data.data.profile_picture)
       }
     }
@@ -195,14 +205,20 @@ const ProfileScreen = props => {
   return (
     <ScrollView>
       <View style={styles.screen}>
+        <Spinner
+          visible={spinner}
+          textContent={'Uploading...'}
+          textStyle={styles.spinnerTextStyle}
+        />
         <Text style={styles.name}>{username}</Text>
         <View style={styles.imageContainer}>
           <TouchableOpacity onPress={pickImage}>
-            <Image style={styles.image}
-              // source={{ uri: imageUrl + '?' + new Date()}}
-              source={{ uri: 'data:image/png;base64,' + imageUrl }}
-              defaultSource={require('../../../assets/profile.jpeg')}
-            />
+            {{ imageUrl } &&
+              <Image style={styles.image}
+                // source={{ uri: imageUrl + '?' + new Date()}}
+                source={{ uri: 'data:image/png;base64,' + imageUrl }}
+              // defaultSource={require('../../../assets/profile.jpeg')}
+              />}
           </TouchableOpacity>
         </View>
         <View style={styles.infoContainer}>
@@ -257,6 +273,9 @@ ProfileScreen.navigationOptions = ({ navigation }) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+  },
+  spinnerTextStyle: {
+    color: '#FFF'
   },
   name: {
     marginTop: 20,

@@ -40,8 +40,10 @@ const ChooseSports = ({ navigation }) => {
     const fetchUsername = async () => {
       let data = await AsyncStorage.getItem('userInfo');
       let user = await JSON.parse(data);
+      let pic = await AsyncStorage.getItem('profile_picture');
+      let userPic = await JSON.parse(pic);
       setUsername(user.username);
-      setImage(user.profile_picture);
+      setImage(userPic.profile_picture);
     }
     const fetchSportField = async () => {
       const response = await fetch(url.url_sportsfield, {

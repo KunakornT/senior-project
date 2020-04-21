@@ -7,6 +7,7 @@ console.log(url)
 export default{
   url_users: url+'/users',
   url_users_profile: url+'/users/profile',
+  url_user_pic: url+'/user-pic',
   url_users_profile_picture: url+'/users/profile/picture', //for update profile picture
   url_users_fetch_picture: url+'/profile-picture', //for fetching image
   url_login: url+'/login',

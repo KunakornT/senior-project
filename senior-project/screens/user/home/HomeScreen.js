@@ -4,16 +4,37 @@ import SelectSports from '../../../components/SelectSports';
 import EventsNearby from '../../../components/EventsNearby';
 import {Ionicons} from '@expo/vector-icons';
 import url from '../../../constants/url-constant';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 const HomeScreen = ({ navigation }) => {
 
   const [username, setUsername] = useState(null);
+  const [spinner, setSpinner] = useState(true);
+
+  async function fetchProfilePic(id) {
+    try {
+      const response = await fetch(url.url_user_pic+'/'+id, {
+        method: 'GET'
+      });
+      const data = await response.json();
+      if(!response.ok) {
+      }
+      else {
+        await AsyncStorage.setItem('profile_picture', JSON.stringify(data[0]));
+        setSpinner(false);
+      }
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
 
   useEffect(() => {
     async function fetchUserData() {
       let data = await AsyncStorage.getItem('userInfo');
       let user = await JSON.parse(data);
+      fetchProfilePic(user.user_id)
       setUsername(user.username);
     }
     fetchUserData();
@@ -21,6 +42,11 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View>
+      <Spinner
+          visible={spinner}
+          textContent={'Loading...'}
+          textStyle={styles.spinnerTextStyle}
+      />
       <ScrollView>
         <Text style={styles.headText}>  Good morning, {username}!  </Text>
         <Text style={styles.textStyle}> Select the sport that you want to play </Text>
@@ -47,6 +73,9 @@ const HomeScreen = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
+  spinnerTextStyle: {
+    color: '#FFF'
+  },
   headText: {
     fontSize: 25,
     fontWeight: 'bold',

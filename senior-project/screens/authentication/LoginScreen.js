@@ -80,8 +80,8 @@ const LoginScreen = props => {
               props.navigation.navigate('Verification');
             }
             else{
-              console.log(data)
               AsyncStorage.setItem('userInfo', JSON.stringify(data));
+              AsyncStorage.setItem('profile_picture', JSON.stringify({"profile_picture": null}));
               AsyncStorage.setItem('isLoggedIn', 'true');
               props.navigation.navigate('Home');
             }
