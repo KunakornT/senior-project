@@ -217,7 +217,7 @@ const ProfileScreen = props => {
               <Image style={styles.image}
                 // source={{ uri: imageUrl + '?' + new Date()}}
                 source={{ uri: 'data:image/png;base64,' + imageUrl }}
-              // defaultSource={require('../../../assets/profile.jpeg')}
+                defaultSource={require('../../../assets/profile.jpeg')}
               />}
           </TouchableOpacity>
         </View>

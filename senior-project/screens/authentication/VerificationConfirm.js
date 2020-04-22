@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Button, AsyncStorage, Alert } from 'react-native';
+import { Text, View, StyleSheet, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Button, AsyncStorage, Alert, TouchableOpacity } from 'react-native';
 
 import Card from '../../components/Card';
 import url from '../../constants/url-constant'
@@ -12,7 +12,7 @@ const VerificationConfirm = props => {
     setPasscode(textInput);
   };
 
-  const updateInfo = async (id) => {
+  const updateInfo = async (id, passcode) => {
     let settings = {
       method: 'PATCH',
       headers: {
@@ -21,7 +21,8 @@ const VerificationConfirm = props => {
       },
       body: JSON.stringify({
         "id": id,
-        "authentication": true
+        "authentication": true,
+        "passcode": passcode
       })
     };
     try {
@@ -35,38 +36,74 @@ const VerificationConfirm = props => {
   }
 
   const confirmPasscodeHandler = async () => {
+    let userData = await AsyncStorage.getItem('userInfo');
+    let user = await JSON.parse(userData);
+    let id = await user.user_id;
+    console.log('passcode' + passcode)
+    const res = await updateInfo(id, passcode);
+    const data = await res.json()
+    if (!res.ok) {
+      Alert.alert(
+        'Error',
+        data.message,
+        [{ text: 'OK', style: 'destructive' }]
+      );
+    }
+    else {
+      Alert.alert(
+        'Success',
+        data.message,
+        [{ text: 'OK', style: 'destructive' }]
+      );
+      console.log('check code')
+      AsyncStorage.setItem('isLoggedIn', 'true');
+      props.navigation.navigate('Home');
+    }
+  }
+
+  const resendHandler = async () => {
+    console.log('resend handler')
     let data = await AsyncStorage.getItem('userInfo');
     let user = await JSON.parse(data);
-    let code = await user.passcode;
-    let id = await user.user_id;
-    console.log('passcode' + passcode + 'userCode:' + code)
-    if (passcode == code) {
-      const res = await updateInfo(id);
-      const data = await res.json()
-      if (res.status !== 200 && res.status !== 201) {
+    const header = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "email": user.email,
+      })
+    }
+    try {
+      const response = await fetch(url.url_users_passcode, header)
+      if (!response.ok) {
         Alert.alert(
           'Error',
-          data.message,
+          'cannot resend verification code',
           [{ text: 'OK', style: 'destructive' }]
         );
       }
       else {
+        const dataReturn = await response.json();
+        // AsyncStorage.getItem('userInfo')
+        //   .then(data => {
+        //     // the string value read from AsyncStorage has been assigned to data
+        //     // console.log(data);
+        //     // transform it back to an object
+        //     data = JSON.parse(data);
+        //     data.passcode = dataReturn.data[0].passcode;
+        //     //save the value to AsyncStorage again
+        //     AsyncStorage.setItem('userInfo', JSON.stringify(data));
+        //   }).done();
         Alert.alert(
           'Success',
-          data.message,
+          'new verification code already sent to your email',
           [{ text: 'OK', style: 'destructive' }]
         );
-        console.log('check code')
-        AsyncStorage.setItem('isLoggedIn', 'true');
-        props.navigation.navigate('Home');
       }
-    }
-    else {
-      Alert.alert(
-        'Verify fail',
-        'verification code is incorrect',
-        [{ text: 'OK', style: 'destructive' }]
-      );
+    } catch (e) {
+      console.log(e)
     }
   }
 
@@ -78,7 +115,10 @@ const VerificationConfirm = props => {
             <Text style={styles.textHeader}>Verification Code</Text>
             <TextInput keyboardType='number-pad' style={styles.textInput} onChangeText={passcodeHandler} value={passcode} />
           </Card>
-          <Button title='Confirm' onPress={confirmPasscodeHandler} />
+          <View>
+            <Button title='Confirm' onPress={confirmPasscodeHandler} />
+            <Button title='Resend' onPress={resendHandler} />
+          </View>
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -103,7 +143,21 @@ const styles = StyleSheet.create({
     borderBottomColor: 'black',
     borderBottomWidth: 1,
     textAlign: 'center'
-  }
+  },
+  buttonInfo: {
+    borderRadius: 50,
+    // borderWidth: 2,
+    // margin: 10,
+    backgroundColor: '#CCCC00',
+    // borderColor: Color.primaryColor
+  },
+  textButton: {
+    alignSelf: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+    padding: 10
+  },
 });
 
 export default VerificationConfirm;
