@@ -151,7 +151,6 @@ const handleSubmit = () => {
      <View style= {styles.titleContainer2}>
      <TouchableOpacity title = "pick the date" onPress={showDatePicker} >
       <DateTimePickerModal
-
         isVisible={isDatePickerVisible}
         mode="date"
         minimumDate={new Date(new Date().getFullYear(), new Date().getMonth(),new Date().getDate())}

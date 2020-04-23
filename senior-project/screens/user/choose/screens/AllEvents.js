@@ -9,13 +9,16 @@ import url from '../../../../constants/url-constant';
 const AllEvents = ({props,navigation}) => {
   const {state} = navigation;
   const [userId, setUserId] = useState();
+  const [matchId, setMatchId] = useState();
   const [event, setEvent] = useState();
+  const [username, setUsername] = useState();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         let data = await AsyncStorage.getItem('userInfo');
         let user = await JSON.parse(data);
+        setUsername(user.username);
         setUserId(user.user_id);
       } catch (e) {
       }
@@ -23,18 +26,25 @@ const AllEvents = ({props,navigation}) => {
     fetchUser();
   }, [])
 
-  useEffect(() => {
-    const fetchEvent = async () => {
-      try {
-        const response = await fetch(`http://senior-project-server.herokuapp.com/match`);
-        const responseJson = await response.json();
-        setEvent(responseJson);
-        console.log(responseJson);
-      } catch (e) {
-      }
+  const fetchEvent = async () => {
+    try {
+      const response = await fetch(`http://senior-project-server.herokuapp.com/match`);
+      const responseJson = await response.json();
+      setEvent(responseJson);
+      // console.log(responseJson);
+    } catch (e) {
     }
+  }
+  useEffect(() => {
     fetchEvent();
-  }, [userId])
+  }, [matchId])
+console.log(matchId);
+
+  const handleUnjoin = (itemId) => {
+    const events = event.filter(item => item.match_id !== itemId);
+    setEvent(events);
+    fetchEvent();
+  }
 
   return <View>
   <ScrollView>
@@ -52,9 +62,7 @@ const AllEvents = ({props,navigation}) => {
               information: item
             })
           }}
-          onDelete={() => {
-            fetchEvent()
-          }} />
+          onDelete={handleUnjoin} />
       }
     })}
     </ScrollView>

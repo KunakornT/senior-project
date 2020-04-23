@@ -38,7 +38,7 @@ const EventScreen = (props) => {
       const response = await fetch(url.url_user_event + '/' + userId);
       const responseJson = await response.json();
       setEvent(responseJson);
-      // console.log(responseJson);
+      console.log(responseJson);
     } catch (e) {
     }
   }
@@ -72,7 +72,7 @@ const EventScreen = (props) => {
   }
 
   return <View>
-    <ScrollView 
+    <ScrollView
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
       <Text style={styles.textStyle}> Your Events </Text>
       <SportsFilter />
