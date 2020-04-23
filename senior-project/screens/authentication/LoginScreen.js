@@ -127,12 +127,38 @@ const LoginScreen = props => {
             return
           }
           else {
-            if(data.hasOwnProperty('user')){
+            if (data.hasOwnProperty('user')) {
               if (data.user.google_signin === true) {
-                AsyncStorage.setItem('userInfo', JSON.stringify(data.user));
-                AsyncStorage.setItem('profile_picture', JSON.stringify({ "profile_picture": null }));
-                AsyncStorage.setItem('isLoggedIn', 'true');
-                props.navigation.navigate('Home');
+                console.log(result)
+                const res = await fetch(url.url_update_google_signin, {
+                  method: 'PATCH',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    "firstname": result.user.givenName,
+                    "lastname": result.user.familyName,
+                    "profilePicture": result.user.photoUrl,
+                    "email": result.user.email,
+                    "username": data.user.username
+                  })
+                });
+                const messageData = await res.json();
+                if (!res.ok) {
+                  Alert.alert(
+                    'Error',
+                    messageData.message,
+                    [{ text: 'OK', style: 'destructive' }]
+                  );
+                  return
+                }
+                else {
+                  AsyncStorage.setItem('userInfo', JSON.stringify(messageData));
+                  AsyncStorage.setItem('profile_picture', JSON.stringify({ "profile_picture": null }));
+                  AsyncStorage.setItem('isLoggedIn', 'true');
+                  props.navigation.navigate('Home');
+                }
               }
             }
             else {

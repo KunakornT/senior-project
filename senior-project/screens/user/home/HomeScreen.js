@@ -21,6 +21,7 @@ const HomeScreen = ({ navigation }) => {
       if(!response.ok) {
       }
       else {
+        console.log(data)
         await AsyncStorage.setItem('profile_picture', JSON.stringify(data[0]));
         setSpinner(false);
       }
@@ -34,6 +35,7 @@ const HomeScreen = ({ navigation }) => {
     async function fetchUserData() {
       let data = await AsyncStorage.getItem('userInfo');
       let user = await JSON.parse(data);
+      console.log(data)
       fetchProfilePic(user.user_id)
       setUsername(user.username);
     }
