@@ -12,6 +12,7 @@ import EventScreen from '../screens/user/event/EventScreen';
 import EventInfoScreen from '../screens/user/event/EventInfoScreen';
 import RegisterScreen from '../screens/authentication/RegisterScreen';
 import VerificationConfirm from '../screens/authentication/VerificationConfirm';
+import ThirdPartyUsername from '../screens/authentication/ThirdPartyUsername'
 import ChooseSports from '../screens/user/choose/ChooseSports';
 import Colors from '../constants/Colors';
 import SportsField from '../screens/user/choose/screens/SportsField';
@@ -28,7 +29,8 @@ import {Provider as LocationProvider} from '../context/LocationContext';
 const AuthStackNavigation = createStackNavigator({
   Login: LoginScreen,
   Register:  RegisterScreen,
-  Verification: VerificationConfirm
+  Verification: VerificationConfirm,
+  Thirdparty: ThirdPartyUsername
 });
 
 

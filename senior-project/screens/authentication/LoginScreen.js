@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Alert, AsyncStorage,AppRegistry } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Alert, AsyncStorage, AppRegistry } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Google from 'expo-google-app-auth';
 import * as Facebook from 'expo-facebook';
@@ -13,12 +13,16 @@ const LoginScreen = props => {
 
 
   async function retrieveData() {
-    const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
-    if(isLoggedIn === 'true'){
-      console.log(isLoggedIn)
-      props.navigation.navigate('Home');
-    }else {
-      await AsyncStorage.clear();
+    try {
+      const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
+      if (isLoggedIn === 'true') {
+        console.log(isLoggedIn)
+        props.navigation.navigate('Home');
+      } else {
+        await AsyncStorage.clear();
+      }
+    } catch (e) {
+      console.log(e)
     }
   }
 
@@ -39,7 +43,7 @@ const LoginScreen = props => {
     setPassword(textInput);
   };
 
-  const onPressLoginHandler = () => {
+  const onPressLoginHandler = async () => {
     if (username.trim() === '' || password.trim() === '') {
       Alert.alert(
         'Invalid Input',
@@ -75,13 +79,14 @@ const LoginScreen = props => {
             );
           }
           else {
-            if(data.authentication === false){
+            if (data.authentication === false) {
               AsyncStorage.setItem('userInfo', JSON.stringify(data));
+              AsyncStorage.setItem('profile_picture', JSON.stringify({ "profile_picture": null }));
               props.navigation.navigate('Verification');
             }
-            else{
+            else {
               AsyncStorage.setItem('userInfo', JSON.stringify(data));
-              AsyncStorage.setItem('profile_picture', JSON.stringify({"profile_picture": null}));
+              AsyncStorage.setItem('profile_picture', JSON.stringify({ "profile_picture": null }));
               AsyncStorage.setItem('isLoggedIn', 'true');
               props.navigation.navigate('Home');
             }
@@ -100,10 +105,45 @@ const LoginScreen = props => {
         iosClientId: '183581867664-mnsfeghc89vt9t8k7fhrui14iuik012b.apps.googleusercontent.com',
         scopes: ['profile', 'email'],
       });
-
       if (result.type === 'success') {
-        console.log(result)
-        return result.accessToken;
+        try {
+          const response = await fetch(url.url_check_google_signin, {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              "email": result.user.email
+            })
+          });
+          const data = await response.json()
+          if (!response.ok) {
+            Alert.alert(
+              'Error',
+              data.message,
+              [{ text: 'OK', style: 'destructive' }]
+            );
+            return
+          }
+          else {
+            if(data.hasOwnProperty('user')){
+              if (data.user.google_signin === true) {
+                AsyncStorage.setItem('userInfo', JSON.stringify(data.user));
+                AsyncStorage.setItem('profile_picture', JSON.stringify({ "profile_picture": null }));
+                AsyncStorage.setItem('isLoggedIn', 'true');
+                props.navigation.navigate('Home');
+              }
+            }
+            else {
+              props.navigation.navigate('Thirdparty', {
+                user: result.user
+              });
+            }
+          }
+        } catch (e) {
+          console.log(e)
+        }
       } else {
         return { cancelled: true };
       }
@@ -117,12 +157,13 @@ const LoginScreen = props => {
 
     try {
       await Facebook.initializeAsync('1865783786890133');
-      const {type,token, expires,permissions,declinedPermissions} =
-      await Facebook.logInWithReadPermissionsAsync('1865783786890133', {
-        permissions: ['public_profile','email'],
-      });
+      const { type, token, expires, permissions, declinedPermissions } =
+        await Facebook.logInWithReadPermissionsAsync('1865783786890133', {
+          permissions: ['public_profile', 'email'],
+        });
       if (type === 'success') {
         const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+        console.log(response.json())
         Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
       } else {
         Alert.alert('Something is wrong !');
@@ -135,39 +176,39 @@ const LoginScreen = props => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView style={styles.screen} behavior='padding' enabled>
-      <View>
-        <Card>
-          <View style={styles.inputWrapper}>
-            <View style={styles.titleContainer}>
-              <MaterialCommunityIcons name='account-box-outline' size={25} />
-              <Text style={styles.text}>Username: </Text>
+        <View>
+          <Card>
+            <View style={styles.inputWrapper}>
+              <View style={styles.titleContainer}>
+                <MaterialCommunityIcons name='account-box-outline' size={25} />
+                <Text style={styles.text}>Username: </Text>
+              </View>
+              <TextInput style={styles.text} onChangeText={usernameHandler} value={username} />
             </View>
-            <TextInput style={styles.text} onChangeText={usernameHandler} value={username} />
-          </View>
-          <View style={styles.inputWrapper}>
-            <View style={styles.titleContainer}>
-              <Ionicons name='md-key' size={25} />
-              <Text style={styles.text}>Password: </Text>
+            <View style={styles.inputWrapper}>
+              <View style={styles.titleContainer}>
+                <Ionicons name='md-key' size={25} />
+                <Text style={styles.text}>Password: </Text>
+              </View>
+              <TextInput style={styles.text} onChangeText={passwordHandler} value={password} />
             </View>
-            <TextInput style={styles.text} onChangeText={passwordHandler} value={password} />
+          </Card>
+          <View style={styles.buttonContainer}>
+            <Button title='Login' onPress={onPressLoginHandler} />
           </View>
-        </Card>
+          <View style={styles.detail}>
+            <Text>Don't have an account?</Text>
+            <TouchableOpacity onPress={() => props.navigation.navigate('Register')}>
+              <Text style={{ color: 'red' }}>Create a new account</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         <View style={styles.buttonContainer}>
-          <Button title='Login' onPress={onPressLoginHandler} />
+          <Button title='Sign in with Google' onPress={signInWithGoogleAsync} color='#BF180A'></Button>
         </View>
-        <View style={styles.detail}>
-          <Text>Don't have an account?</Text>
-          <TouchableOpacity onPress={() => props.navigation.navigate('Register')}>
-            <Text style={{ color: 'red' }}>Create a new account</Text>
-          </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <Button title='Sign in with Facebook' onPress={signInWithFacebook} color='#3B5998'></Button>
         </View>
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button title='Sign in with Google' onPress={signInWithGoogleAsync} color='#BF180A'></Button>
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button title='Sign in with Facebook' onPress={signInWithFacebook} color='#BF180A'></Button>
-      </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );

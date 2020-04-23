@@ -10,7 +10,10 @@ export default{
   url_user_pic: url+'/user-pic',
   url_users_profile_picture: url+'/users/profile/picture', //for update profile picture
   url_users_fetch_picture: url+'/profile-picture', //for fetching image
+  url_users_passcode: url+'/passcode',
   url_login: url+'/login',
+  url_google_signin: url+'/google-signin',
+  url_check_google_signin: url+'/check-google-signin',
   url_sportsfield: url+'/sport-field',
   url_user_event: url+'/user-event',
   url_user_history_event: url+'/user-history-event', 
