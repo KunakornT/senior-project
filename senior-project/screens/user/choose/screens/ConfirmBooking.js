@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import {Text,StyleSheet,View, TouchableOpacity,AsyncStorage} from 'react-native';
+import {Text,StyleSheet,View, TouchableOpacity,AsyncStorage,Alert} from 'react-native';
 
 const ConfirmBooking = ({navigation,props}) => {
   const {state} = navigation;
@@ -22,6 +22,21 @@ const ConfirmBooking = ({navigation,props}) => {
     fetchUserData();
   }, [username])
 
+  const confirmation=()=>{
+   //function to make two option alert
+   Alert.alert(
+     //title
+     'Confirm Booking',
+     //body
+     'if you confirm the booking, you can cancel this event before 8 hours of booking time',
+     [
+       {text: 'No', onPress: () => console.log('No Pressed'), style: 'cancel'},
+       {text: 'Yes', onPress: () => handleSubmit()},
+     ],
+     { cancelable: false }
+     //clicking out side of alert will not cancel
+   );
+ }
 
   const handleSubmit = () => {
         var dateStart = new Date(startTime);
@@ -45,7 +60,12 @@ const ConfirmBooking = ({navigation,props}) => {
           body: data,
         });
         console.log(data);
-         navigation.navigate('Home');
+         navigation.navigate('Home',
+         Alert.alert(
+           'Success',
+           'You have created the event, check information on Event page',
+           { cancelable: false }
+         ));
       }
 
 
@@ -78,7 +98,7 @@ const ConfirmBooking = ({navigation,props}) => {
         <View style = {styles.descriptionBox}>
         <Text style = {styles.description}>{description}</Text>
         </View>
-        <TouchableOpacity style = {styles.button} onPress = {handleSubmit}>
+        <TouchableOpacity style = {styles.button} onPress = {confirmation}>
         <Text style = {styles.textButton}> Confirm </Text>
         </TouchableOpacity>
         </View>

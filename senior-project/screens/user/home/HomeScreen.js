@@ -53,7 +53,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.row}>
           <SelectSports />
         </View>
-        <Text style={styles.headText}>  Events nearby you  </Text>
+        <Text style={styles.headText}>  Events  </Text>
         <View>
           <TouchableOpacity onPress={() => navigation.navigate('Field')}>
             <EventsNearby

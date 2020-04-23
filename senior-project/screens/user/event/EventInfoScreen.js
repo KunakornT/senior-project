@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions,AsyncStorage,Alert } from 'react-native'
 
 import url from '../../../constants/url-constant'
 
 const EventInfoScreen = (props) => {
+
+  const [username, setUsername] = useState();
+  const [userId, setUserId] = useState();
 
   const [sportFieldName, setSportFieldName] = useState('sport field name');
   const [matchId, setMatchId] = useState('');
@@ -12,7 +15,22 @@ const EventInfoScreen = (props) => {
   const [endTime, setEndTime] = useState('');
   const [numberPlayer, setNumberPlayer] = useState('');
   const [maxPlayer, setMaxPlayer] = useState('');
-  const [player, setPlayer] = useState()
+  const [player, setPlayer] = useState();
+  const [description,setDescription] = useState('');
+  const [reserveUser,setReserveUser] = useState('');
+  const [count,setCount] = useState(0);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        let data = await AsyncStorage.getItem('userInfo');
+        let user = await JSON.parse(data);
+        setUsername(user.username);
+        setUserId(user.user_id);
+      } catch (e) {
+      }
+    }
+    fetchUser();
+  }, [])
 
   function addZero(i) {
     if (i < 10) {
@@ -37,6 +55,58 @@ const EventInfoScreen = (props) => {
     fetchSportField(info.match_id);
   }, [matchId])
 
+
+console.log(props);
+    function confirmAlert() {
+        Alert.alert(
+          'Join Match',
+          'Do you want to join the match',
+          [
+            { text: 'Yes', onPress: () => joinMatch() },
+            { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+          ],
+          { cancelable: false }
+        )
+        // setCount(count+1);
+        // console.log(count);
+      // else{
+      //   Alert.alert(
+      //     'You have already joined',
+      //     'You have joined this event, please check the information of the match',
+      //     { cancelable: false }
+      //   )
+      // }
+    }
+
+    function joinMatch() {
+      const info = props.navigation.getParam('information');
+      setMatchId(info.match_id);
+      console.log(matchId);
+      console.log(userId);
+      const data = JSON.stringify({
+        "matchId": matchId,
+        "userId": userId
+      });
+      try {
+        fetch(url.url_match_user, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: data,
+        });
+      } catch (e) {
+        console.log(e)
+      }
+       props.navigation.navigate('Home',
+       Alert.alert(
+         'Success',
+         'You are now joined the event, check information on Event page',
+         { cancelable: false }
+       ));
+    }
+
   useEffect(() => {
     const info = props.navigation.getParam('information');
     const date = new Date(info.start_time).getUTCDate();
@@ -53,6 +123,8 @@ const EventInfoScreen = (props) => {
     setEndTime(endHour + ':' + endMinute);
     setNumberPlayer(info.number_player);
     setMaxPlayer(info.max_player);
+    setDescription(info.description);
+    setReserveUser(info.reserve_user);
   }, [])
 
   return (
@@ -61,6 +133,7 @@ const EventInfoScreen = (props) => {
       <Text style={styles.textDetail}>Date: {startDate}</Text>
       <Text style={styles.textDetail}>Time of booking: {startTime} - {endTime}</Text>
       <Text style={styles.textDetail}>People joining: {numberPlayer}/{maxPlayer}</Text>
+      <Text style={styles.textDetail}>Note: {description}</Text>
       {player &&
         <ScrollView>
           <View style={styles.memberContainer}>
@@ -80,6 +153,10 @@ const EventInfoScreen = (props) => {
               )
             })}
           </View>
+          {username !== reserveUser &&
+          <TouchableOpacity style = {styles.button} onPress = {confirmAlert}>
+          <Text style = {styles.textButton}> Join </Text>
+          </TouchableOpacity>}
         </ScrollView>}
     </View>
   )
@@ -123,6 +200,19 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+  },textButton:{
+    fontSize: 20,
+    color: 'white',
+    alignSelf: 'center',
+    padding: 10
+  },
+  button:{
+    borderRadius: 50,
+    borderWidth: 2,
+    alignSelf: 'center',
+    margin:10,
+    backgroundColor: '#FFA64B',
+    borderColor: 'white'
   },
 })
 

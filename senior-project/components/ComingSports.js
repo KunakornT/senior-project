@@ -62,6 +62,38 @@ const ComingSports = (props) => {
     props.onDelete(props.item.match_id)
   }
 
+  function confirmAlert2() {
+    Alert.alert(
+      'Cancel Event',
+      'Do you want to cancel this event',
+      [
+        { text: 'Yes', onPress: () => deleteMatch() },
+        { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+      ],
+      { cancelable: false }
+    )
+  }
+
+  function deleteMatch() {
+    const data = JSON.stringify({
+      "matchId": props.item.match_id,
+      "username": username
+    });
+    try {
+      fetch('http://senior-project-server.herokuapp.com/match',{
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: data,
+      });
+    } catch (e) {
+      console.log(e)
+    }
+    props.onDelete(props.item.match_id)
+  }
+
   const date = new Date(props.item.start_time).getUTCDate();
   const month = new Date(props.item.start_time).getUTCMonth() + 1;
   const year = new Date(props.item.start_time).getUTCFullYear();
@@ -87,7 +119,7 @@ const ComingSports = (props) => {
             <TouchableOpacity style={styles.buttonInfo} onPress={props.onViewInfo}>
               <Text style={styles.textButton}> Information </Text>
             </TouchableOpacity>
-            {username === props.item.reserve_user && <TouchableOpacity style={styles.buttonCancel}>
+            {username === props.item.reserve_user && <TouchableOpacity style={styles.buttonCancel} onPress={confirmAlert2}>
               <Text style={styles.textButton}> Cancel </Text>
             </TouchableOpacity>}
             {username !== props.item.reserve_user && <TouchableOpacity style={styles.buttonCancel} onPress={confirmAlert}>
