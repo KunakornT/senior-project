@@ -70,7 +70,9 @@ const EventScreen = (props) => {
     setEvent(events);
     fetchEvent();
   }
-
+  // const dt = new Date()
+  // dt.setHours(dt.getHours() + 7)
+  // console.log(dt)
   return <View>
     <ScrollView
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>

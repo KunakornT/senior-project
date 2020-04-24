@@ -258,7 +258,8 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   buttonContainer: {
-    marginHorizontal: 20
+    marginHorizontal: 20,
+    marginBottom: 10
   },
   detail: {
     marginVertical: 20,
