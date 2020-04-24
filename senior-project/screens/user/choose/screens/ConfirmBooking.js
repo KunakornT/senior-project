@@ -64,6 +64,9 @@ const ConfirmBooking = ({navigation,props}) => {
          Alert.alert(
            'Success',
            'You have created the event, check information on Event page',
+           [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+           ],
            { cancelable: false }
          ));
       }

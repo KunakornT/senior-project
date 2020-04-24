@@ -103,6 +103,9 @@ console.log(props);
        Alert.alert(
          'Success',
          'You are now joined the event, check information on Event page',
+         [
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+         ],
          { cancelable: false }
        ));
     }
