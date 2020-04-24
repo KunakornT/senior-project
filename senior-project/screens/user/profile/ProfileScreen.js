@@ -8,6 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 import url from '../../../constants/url-constant';
 import Color from '../../../constants/Colors';
+import { render } from 'react-dom';
 
 const ProfileScreen = props => {
   const [id, setId] = useState(0);
@@ -19,6 +20,7 @@ const ProfileScreen = props => {
   const [gender, setGender] = useState('');
   const [isEdit, setIsEdit] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
+  const [isGoogle, setIsGoogle] = useState(null);
   const [spinner, setSpinner] = useState(false);
 
   function getAge(dateString) {
@@ -43,6 +45,8 @@ const ProfileScreen = props => {
     setGender(user.gender);
     setEmail(user.email);
     setId(user.user_id)
+    setIsGoogle(user.google_signin)
+    props.navigation.setParams({ google: user.google_signin})
   }
 
   useEffect(() => {
@@ -202,6 +206,21 @@ const ProfileScreen = props => {
     props.navigation.navigate('Auth');
   }
 
+  // if (isGoogle === true) {
+  //   let image = <Image style={styles.image}
+  //     source={{ uri: imageUrl }}
+  //     defaultSource={require('../../../assets/profile.jpeg')}
+  //   />
+  // }
+  // else {
+  //   let image = <TouchableOpacity onPress={pickImage}>
+  //     <Image style={styles.image}
+  //       // source={{ uri: imageUrl + '?' + new Date()}}
+  //       source={{ uri: 'data:image/png;base64,' + imageUrl }}
+  //       defaultSource={require('../../../assets/profile.jpeg')}
+  //     />}
+  //   </TouchableOpacity>
+  // }
   return (
     <ScrollView>
       <View style={styles.screen}>
@@ -212,14 +231,18 @@ const ProfileScreen = props => {
         />
         <Text style={styles.name}>{username}</Text>
         <View style={styles.imageContainer}>
-          <TouchableOpacity onPress={pickImage}>
-            {{ imageUrl } &&
-              <Image style={styles.image}
-                // source={{ uri: imageUrl + '?' + new Date()}}
-                source={{ uri: 'data:image/png;base64,' + imageUrl }}
-                defaultSource={require('../../../assets/profile.jpeg')}
-              />}
-          </TouchableOpacity>
+          {(isGoogle === null) && <TouchableOpacity onPress={pickImage}>
+            <Image style={styles.image}
+              // source={{ uri: imageUrl + '?' + new Date()}}
+              source={{ uri: 'data:image/png;base64,' + imageUrl }}
+              defaultSource={require('../../../assets/profile.jpeg')}
+            />
+          </TouchableOpacity>}
+          {(isGoogle) &&
+            <Image style={styles.image}
+              source={{ uri: imageUrl }}
+              defaultSource={require('../../../assets/profile.jpeg')}
+            />}
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.textHeader}>Firstname:</Text>
@@ -237,18 +260,18 @@ const ProfileScreen = props => {
             onChangeText={lastnameHandler}
             editable={isEdit} />
         </View>
-        <View style={styles.infoContainer}>
+        {(isGoogle === null) && <View style={styles.infoContainer}>
           <Text style={styles.textHeader}>Age:</Text>
           <TextInput style={styles.input} value={age} editable={false} />
-        </View>
+        </View>}
         <View style={styles.infoContainer}>
           <Text style={styles.textHeader}>Email:</Text>
           <TextInput style={styles.input} value={email} editable={false} />
         </View>
-        <View style={styles.infoContainer}>
+        {(isGoogle === null) && <View style={styles.infoContainer}>
           <Text style={styles.textHeader}>Gender:</Text>
           <TextInput style={styles.input} value={gender} editable={false} />
-        </View>
+        </View>}
         <View style={styles.button}>
           <Button title='Log out' onPress={logoutHandler} color={Platform.OS === 'android' ? 'grey' : ''} />
         </View>
@@ -259,14 +282,22 @@ const ProfileScreen = props => {
 }
 
 ProfileScreen.navigationOptions = ({ navigation }) => {
-  const isOnEdit = navigation.getParam('isOnEdit');
-  return {
-    title: 'Your Profile',
-    headerRight: () => (
-      <TouchableOpacity onPress={navigation.getParam('onEdit')}>
-        <AntDesign style={styles.headerButton} name={isOnEdit === true ? 'save' : 'edit'} size={23} />
-      </TouchableOpacity>
-    )
+  const isOnEdit = navigation.getParam('isOnEdit')
+  const isGoogle = navigation.getParam('google')
+  if(isGoogle === true){
+    return {
+      title: 'Your Profile',
+    }
+  }
+  else {
+    return {
+      title: 'Your Profile',
+      headerRight: () => (
+        <TouchableOpacity onPress={navigation.getParam('onEdit')}>
+          <AntDesign style={styles.headerButton} name={isOnEdit === true ? 'save' : 'edit'} size={23} />
+        </TouchableOpacity>
+      )
+    }
   }
 }
 
