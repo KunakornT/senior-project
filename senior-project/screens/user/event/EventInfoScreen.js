@@ -110,6 +110,40 @@ console.log(props);
        ));
     }
 
+
+      function confirmAlert2() {
+        Alert.alert(
+          'Cancel Event',
+          'Do you want to cancel this event',
+          [
+            { text: 'Yes', onPress: () => deleteMatch() },
+            { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+          ],
+          { cancelable: false }
+        )
+      }
+
+      function deleteMatch() {
+        const info = props.navigation.getParam('information');
+        setMatchId(info.match_id);
+        const data = JSON.stringify({
+          "matchId": matchId,
+          "username": username
+        });
+        try {
+          fetch('http://senior-project-server.herokuapp.com/match',{
+            method: 'DELETE',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: data,
+          });
+        } catch (e) {
+          console.log(e)
+        }
+        }
+
   useEffect(() => {
     const info = props.navigation.getParam('information');
     const date = new Date(info.start_time).getUTCDate();
@@ -159,6 +193,10 @@ console.log(props);
           {username !== reserveUser &&
           <TouchableOpacity style = {styles.button} onPress = {confirmAlert}>
           <Text style = {styles.textButton}> Join </Text>
+          </TouchableOpacity>}
+          {username == reserveUser &&
+          <TouchableOpacity style = {styles.button} onPress = {confirmAlert2}>
+          <Text style = {styles.textButton}> Cancel </Text>
           </TouchableOpacity>}
         </ScrollView>}
     </View>
