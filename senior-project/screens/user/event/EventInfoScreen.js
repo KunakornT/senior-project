@@ -78,7 +78,7 @@ console.log(props);
       // }
     }
 
-    function joinMatch() {
+    async function joinMatch() {
       const info = props.navigation.getParam('information');
       setMatchId(info.match_id);
       console.log(matchId);
@@ -88,7 +88,7 @@ console.log(props);
         "userId": userId
       });
       try {
-        fetch(url.url_match_user, {
+        const res = await fetch(url.url_match_user, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
@@ -96,18 +96,31 @@ console.log(props);
           },
           body: data,
         });
+        const resData = await res.json()
+      if(!res.ok) {
+        Alert.alert(
+          'Error',
+          resData.message,
+          [
+           { text: "OK", onPress: () => console.log("OK Pressed") }
+          ],
+          { cancelable: false }
+        )
+      }
+      else {
+        props.navigation.navigate('Home',
+        Alert.alert(
+          'Success',
+          'You are now joined the event, check information on Event page',
+          [
+           { text: "OK", onPress: () => console.log("OK Pressed") }
+          ],
+          { cancelable: false }
+        ));
+      }
       } catch (e) {
         console.log(e)
       }
-       props.navigation.navigate('Home',
-       Alert.alert(
-         'Success',
-         'You are now joined the event, check information on Event page',
-         [
-          { text: "OK", onPress: () => console.log("OK Pressed") }
-         ],
-         { cancelable: false }
-       ));
     }
 
 
