@@ -8,23 +8,64 @@ const ThirdPartyUsername = props => {
 
   const [username, setUsername] = useState('')
   const [user, setUser] = useState()
+  const [isGoogle, setIsGoogle] = useState()
   useEffect(() => {
     const user = props.navigation.getParam('user');
+    const google = props.navigation.getParam('google');
     setUser(user);
+    setIsGoogle(google)
   }, [])
 
   const confirmUsernameHandler = async () => {
     if (username.trim() === '') {
       Alert.alert(
         'Invalid Input',
-        'Must specific all fields',
-        [{ text: 'OK', style: 'destructive', onPress: resetInputHandler }]
+        'must specify all fields',
+        [{ text: 'OK', style: 'destructive'}]
       );
       return;
     }
-    else {
+    else if (isGoogle) {
+      console.log('Google!!!')
       try {
         const response = await fetch(url.url_google_signin, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "email": user.email,
+            "username": username,
+            "firstname": user.givenName,
+            "lastname": user.familyName,
+            "profilePicture": user.photoUrl
+          })
+        });
+        const data = await response.json();
+        console.log(data.user)
+        if (!response.ok) {
+          Alert.alert(
+            'Error',
+            data.message,
+            [{ text: 'OK', style: 'destructive' }]
+          );
+        }
+        else {
+          console.log(data)
+          AsyncStorage.setItem('userInfo', JSON.stringify(data.user[0]));
+          AsyncStorage.setItem('profile_picture', JSON.stringify({ "profile_picture": null }));
+          AsyncStorage.setItem('isLoggedIn', 'true');
+          props.navigation.navigate('Home');
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    else if (!isGoogle) {
+      try {
+        console.log('Facebook!!!')
+        const response = await fetch(url.url_facebook_signin, {
           method: 'POST',
           headers: {
             Accept: 'application/json',

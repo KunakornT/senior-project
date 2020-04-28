@@ -100,6 +100,7 @@ const LoginScreen = props => {
 
   async function signInWithGoogleAsync() {
     try {
+      console.log('press google')
       const result = await Google.logInAsync({
         androidClientId: '183581867664-cbisp9llbkr18ipnfvi87mjit4nt60kp.apps.googleusercontent.com',
         iosClientId: '183581867664-mnsfeghc89vt9t8k7fhrui14iuik012b.apps.googleusercontent.com',
@@ -107,7 +108,7 @@ const LoginScreen = props => {
       });
       if (result.type === 'success') {
         try {
-          const response = await fetch(url.url_check_google_signin, {
+          const response = await fetch(url.url_check_thirdparty_signin, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -130,7 +131,7 @@ const LoginScreen = props => {
             if (data.hasOwnProperty('user')) {
               if (data.user.google_signin === true) {
                 console.log(result)
-                const res = await fetch(url.url_update_google_signin, {
+                const res = await fetch(url.url_update_thirdparty_signin, {
                   method: 'PATCH',
                   headers: {
                     Accept: 'application/json',
@@ -163,7 +164,8 @@ const LoginScreen = props => {
             }
             else {
               props.navigation.navigate('Thirdparty', {
-                user: result.user
+                user: result.user,
+                google: true
               });
             }
           }
@@ -180,7 +182,6 @@ const LoginScreen = props => {
 
 
   async function signInWithFacebook() {
-
     try {
       await Facebook.initializeAsync('1865783786890133');
       const { type, token, expires, permissions, declinedPermissions } =
@@ -188,14 +189,84 @@ const LoginScreen = props => {
           permissions: ['public_profile', 'email'],
         });
       if (type === 'success') {
-        const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-        console.log(response.json())
-        Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+        const res = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,first_name,last_name,email,about,picture`);
+        const result = await res.json();
+        console.log(result)
+        try {
+          const response = await fetch(url.url_check_thirdparty_signin, {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              "email": result.email
+            })
+          });
+          const data = await response.json()
+          if (!response.ok) {
+            Alert.alert(
+              'Error',
+              data.message,
+              [{ text: 'OK', style: 'destructive' }]
+            );
+            return
+          }
+          else {
+            if (data.hasOwnProperty('user')) {
+              console.log(data.user)
+              if (data.user.facebook_signin === true) {
+                const resUpdate = await fetch(url.url_update_thirdparty_signin, {
+                  method: 'PATCH',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    "firstname": result.first_name,
+                    "lastname": result.last_name,
+                    "profilePicture": result.picture.data.url,
+                    "email": result.email,
+                    "username": data.user.username
+                  })
+                });
+                const messageData = await resUpdate.json();
+                if (!resUpdate.ok) {
+                  Alert.alert(
+                    'Error',
+                    messageData.message,
+                    [{ text: 'OK', style: 'destructive' }]
+                  );
+                  return
+                }
+                else {
+                  AsyncStorage.setItem('userInfo', JSON.stringify(messageData));
+                  AsyncStorage.setItem('profile_picture', JSON.stringify({ "profile_picture": null }));
+                  AsyncStorage.setItem('isLoggedIn', 'true');
+                  props.navigation.navigate('Home');
+                }
+              }
+            }
+            else {
+              props.navigation.navigate('Thirdparty', {
+                user: {
+                        email: result.email, 
+                        familyname: result.last_name, 
+                        given_name: result.first_name, 
+                        photoUrl: result.picture.data.url
+                      },
+                google: false
+              });
+            }
+          }
+        } catch (e) {
+          console.log(e)
+        }
       } else {
         Alert.alert('Something is wrong !');
       }
     } catch ({ message }) {
-      Alert.alert(`Facebook Login Error: ${message}`);
+      // Alert.alert(`Facebook Login Error: ${message}`);
     }
   }
 

@@ -21,6 +21,7 @@ const ProfileScreen = props => {
   const [isEdit, setIsEdit] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [isGoogle, setIsGoogle] = useState(null);
+  const [isFacebook, setIsFacebook] = useState(null)
   const [spinner, setSpinner] = useState(false);
 
   function getAge(dateString) {
@@ -44,9 +45,11 @@ const ProfileScreen = props => {
     setAge(calAge);
     setGender(user.gender);
     setEmail(user.email);
-    setId(user.user_id)
-    setIsGoogle(user.google_signin)
+    setId(user.user_id);
+    setIsGoogle(user.google_signin);
+    setIsFacebook(user.facebook_signin);
     props.navigation.setParams({ google: user.google_signin})
+    props.navigation.setParams({ facebook: user.facebook_signin})
   }
 
   useEffect(() => {
@@ -231,14 +234,14 @@ const ProfileScreen = props => {
         />
         <Text style={styles.name}>{username}</Text>
         <View style={styles.imageContainer}>
-          {(isGoogle === null) && <TouchableOpacity onPress={pickImage}>
+          {(isGoogle === null) && (isFacebook === null) && <TouchableOpacity onPress={pickImage}>
             <Image style={styles.image}
               // source={{ uri: imageUrl + '?' + new Date()}}
               source={{ uri: 'data:image/png;base64,' + imageUrl }}
               defaultSource={require('../../../assets/profile.jpeg')}
             />
           </TouchableOpacity>}
-          {(isGoogle) &&
+          {((isGoogle) || (isFacebook)) &&
             <Image style={styles.image}
               source={{ uri: imageUrl }}
               defaultSource={require('../../../assets/profile.jpeg')}
@@ -260,7 +263,7 @@ const ProfileScreen = props => {
             onChangeText={lastnameHandler}
             editable={isEdit} />
         </View>
-        {(isGoogle === null) && <View style={styles.infoContainer}>
+        {(isGoogle === null) && (isFacebook === null) && <View style={styles.infoContainer}>
           <Text style={styles.textHeader}>Age:</Text>
           <TextInput style={styles.input} value={age} editable={false} />
         </View>}
@@ -268,7 +271,7 @@ const ProfileScreen = props => {
           <Text style={styles.textHeader}>Email:</Text>
           <TextInput style={styles.input} value={email} editable={false} />
         </View>
-        {(isGoogle === null) && <View style={styles.infoContainer}>
+        {(isGoogle === null) && (isFacebook === null) && <View style={styles.infoContainer}>
           <Text style={styles.textHeader}>Gender:</Text>
           <TextInput style={styles.input} value={gender} editable={false} />
         </View>}
@@ -284,7 +287,8 @@ const ProfileScreen = props => {
 ProfileScreen.navigationOptions = ({ navigation }) => {
   const isOnEdit = navigation.getParam('isOnEdit')
   const isGoogle = navigation.getParam('google')
-  if(isGoogle === true){
+  const isFacebook = navigation.getParam('facebook')
+  if(isGoogle === true || isFacebook === true){
     return {
       title: 'Your Profile',
     }
