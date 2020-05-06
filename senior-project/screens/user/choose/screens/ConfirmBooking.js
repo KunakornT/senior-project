@@ -1,9 +1,9 @@
-import React,{useState,useEffect} from 'react';
-import {Text,StyleSheet,View, TouchableOpacity,AsyncStorage,Alert} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, StyleSheet, View, TouchableOpacity, AsyncStorage, Alert } from 'react-native';
 
-const ConfirmBooking = ({navigation,props}) => {
-  const {state} = navigation;
-  const [username,setUsername] = useState('');
+const ConfirmBooking = ({ navigation, props }) => {
+  const { state } = navigation;
+  const [username, setUsername] = useState('');
   var id = state.params ? state.params.id : "<undefined>";
   var sportID = state.params ? state.params.sportID : "<undefined>";
   var type = state.params ? state.params.type : "<undefined>"
@@ -22,89 +22,114 @@ const ConfirmBooking = ({navigation,props}) => {
     fetchUserData();
   }, [username])
 
-  const confirmation=()=>{
-   //function to make two option alert
-   Alert.alert(
-     //title
-     'Confirm Booking',
-     //body
-     'if you confirm the booking, you can cancel this event before 8 hours of booking time',
-     [
-       {text: 'No', onPress: () => console.log('No Pressed'), style: 'cancel'},
-       {text: 'Yes', onPress: () => handleSubmit()},
-     ],
-     { cancelable: false }
-     //clicking out side of alert will not cancel
-   );
- }
+  const confirmation = () => {
+    //function to make two option alert
+    Alert.alert(
+      //title
+      'Confirm Booking',
+      //body
+      'if you confirm the booking, you can cancel this event before 8 hours of booking time',
+      [
+        { text: 'No', onPress: () => console.log('No Pressed'), style: 'cancel' },
+        { text: 'Yes', onPress: () => handleSubmit() },
+      ],
+      { cancelable: false }
+      //clicking out side of alert will not cancel
+    );
+  }
 
-  const handleSubmit = () => {
-        var dateStart = new Date(startTime);
-        var dateEnd = new Date(endTime);
-        const data = JSON.stringify({
-            "sportFieldId": sportID,
-            "subFieldId": id,
-            "sportType": type,
-            "startTime": date + 'T' + startTime + ':00',
-            "endTime": date + 'T' + endTime + ':00',
-            "reserveUser": username,
-            "maxPlayer": player,
-            "description": description
-        });
-        fetch('http://senior-project-server.herokuapp.com/match', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: data,
-        });
-        console.log(data);
-         navigation.navigate('Home',
-         Alert.alert(
-           'Success',
-           'You have created the event, check information on Event page',
-           [
-            { text: "OK", onPress: () => console.log("OK Pressed") }
-           ],
-           { cancelable: false }
-         ));
+  const handleSubmit = async () => {
+    var dateStart = new Date(startTime);
+    var dateEnd = new Date(endTime);
+    const data = JSON.stringify({
+      "sportFieldId": sportID,
+      "subFieldId": id,
+      "sportType": type,
+      "startTime": date + 'T' + startTime + ':00Z',
+      "endTime": date + 'T' + endTime + ':00Z',
+      "reserveUser": username,
+      "maxPlayer": player,
+      "description": description
+    });
+    console.log(data)
+    try {
+      const response = await fetch('http://senior-project-server.herokuapp.com/match', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: data,
+      });
+      const message = await response.json()
+      console.log(data);
+      if (!response.ok) {
+        Alert.alert(
+          'Error',
+          message.message,
+          [
+            { text: 'Yes' },
+          ],
+        );
       }
+      else {
+        navigation.navigate('Home',
+          Alert.alert(
+            'Success',
+            'You have created the event, check information on Event page',
+            [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+          ));
+      }
+    }
+    catch (e) {
+      console.log(error)
+      Alert.alert(
+        'Error',
+        'booking sport field error',
+        [
+          { text: 'Yes' },
+        ],
+      );
+    }
+  }
 
 
   return <View>
-        <Text style = {styles.headText}> Confirm Booking </Text>
+    <Text style={styles.headText}> Confirm Booking </Text>
 
-        <View style = {styles.titleContainer}>
-        <Text style = {styles.hardText}> Hosting event: </Text>
-        <Text style = {styles.normalText} > {username} </Text>
-        </View>
-        <View style = {styles.titleContainer}>
-        <Text style = {styles.hardText} > Sport type:  </Text>
-        <Text style = {styles.normalText} > {type} </Text>
-        </View>
-        <View style = {styles.titleContainer}>
-        <Text style = {styles.hardText} > Date:  </Text>
-        <Text style = {styles.normalText}> {date} </Text>
-        </View>
-        <View style = {styles.titleContainer}>
-        <Text style = {styles.hardText} > Time:  </Text>
-        <Text style = {styles.normalText}>{startTime} - {endTime}</Text>
-        </View>
-        <View style = {styles.titleContainer}>
-        <Text style = {styles.hardText} > Request player: </Text>
-        <Text style = {styles.normalText}> {player}</Text>
-        </View>
-        <View style = {styles.titleContainer}>
-        <Text style = {styles.hardText} > Note: </Text>
-        </View>
-        <View style = {styles.descriptionBox}>
-        <Text style = {styles.description}>{description}</Text>
-        </View>
-        <TouchableOpacity style = {styles.button} onPress = {confirmation}>
-        <Text style = {styles.textButton}> Confirm </Text>
-        </TouchableOpacity>
-        </View>
+    <View style={styles.titleContainer}>
+      <Text style={styles.hardText}> Hosting event: </Text>
+      <Text style={styles.normalText} > {username} </Text>
+    </View>
+    <View style={styles.titleContainer}>
+      <Text style={styles.hardText} > Sport type:  </Text>
+      <Text style={styles.normalText} > {type} </Text>
+    </View>
+    <View style={styles.titleContainer}>
+      <Text style={styles.hardText} > Date:  </Text>
+      <Text style={styles.normalText}> {date} </Text>
+    </View>
+    <View style={styles.titleContainer}>
+      <Text style={styles.hardText} > Time:  </Text>
+      <Text style={styles.normalText}>{startTime} - {endTime}</Text>
+    </View>
+    <View style={styles.titleContainer}>
+      <Text style={styles.hardText} > Request player: </Text>
+      <Text style={styles.normalText}> {player}</Text>
+    </View>
+    <View style={styles.titleContainer}>
+      <Text style={styles.hardText} > Note: </Text>
+    </View>
+    <View style={styles.descriptionBox}>
+      <Text style={styles.description}>{description}</Text>
+    </View>
+    <TouchableOpacity style={styles.button} onPress={confirmation}>
+      <Text style={styles.textButton}> Confirm </Text>
+    </TouchableOpacity>
+  </View>
 }
 const styles = StyleSheet.create({
   headText: {
@@ -114,10 +139,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignSelf: 'center'
   },
-  normalText:{
+  normalText: {
     fontSize: 18,
   },
-  description:{
+  description: {
     fontSize: 18,
     alignSelf: 'center',
     margin: 2,
@@ -129,21 +154,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 5
   },
-  hardText:{
+  hardText: {
     fontSize: 18,
     fontWeight: 'bold'
   },
-  textButton:{
+  textButton: {
     fontSize: 20,
     color: 'white',
     alignSelf: 'center',
     padding: 10
   },
-  button:{
+  button: {
     borderRadius: 50,
     borderWidth: 2,
     alignSelf: 'center',
-    margin:10,
+    margin: 10,
     backgroundColor: '#FFA64B',
     borderColor: 'white'
   },
