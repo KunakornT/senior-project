@@ -87,11 +87,11 @@ const ChooseSports = ({ navigation }) => {
           latitudeDelta: 0.005,
           longitudeDelta: 0.005
         }}
-        //  region={{
-        //    ...currentLocation.coords,
-        //    latitudeDelta: 0.005,
-        //    longitudeDelta: 0.005
-        //  }}
+        region={{
+          ...currentLocation.coords,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005
+       }}
       >
         {(sportField !== null) && sportField.map(field => (
           <Marker

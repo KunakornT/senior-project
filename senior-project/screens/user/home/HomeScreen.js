@@ -5,12 +5,15 @@ import EventsNearby from '../../../components/EventsNearby';
 import {Ionicons} from '@expo/vector-icons';
 import url from '../../../constants/url-constant';
 import Spinner from 'react-native-loading-spinner-overlay';
+import EventsFilter from '../../../components/EventsFilter';
+
 
 
 const HomeScreen = ({ navigation }) => {
 
   const [username, setUsername] = useState(null);
   const [spinner, setSpinner] = useState(true);
+    const [event, setEvent] = useState();
 
   async function fetchProfilePic(id) {
     try {
@@ -40,6 +43,25 @@ const HomeScreen = ({ navigation }) => {
     fetchUserData();
   }, [username])
 
+  const fetchEvent = async () => {
+    try {
+      const response = await fetch(url.url_match);
+      const responseJson = await response.json();
+      setEvent(responseJson);
+      // console.log(responseJson);
+    } catch (e) {
+    }
+  }
+  useEffect(() => {
+    fetchEvent();
+  })
+  const handleUnjoin = (itemId) => {
+    const events = event.filter(item => item.match_id !== itemId);
+    setEvent(events);
+    fetchEvent();
+  }
+
+
   return (
     <View>
       <Spinner
@@ -54,19 +76,22 @@ const HomeScreen = ({ navigation }) => {
           <SelectSports />
         </View>
         <Text style={styles.headText}>  Events  </Text>
-        <View>
-          <TouchableOpacity onPress={() => navigation.navigate('Field')}>
-            <EventsNearby
-              title="Futsal Park RAMA II"
-              imageSource={require('../../../assets/football.jpg')} />
-          </TouchableOpacity>
-        </View>
-        <EventsNearby
-          title="Unun badminton"
-          imageSource={require('../../../assets/badminton.jpg')} />
-        <EventsNearby
-          title="Chris basketball"
-          imageSource={require('../../../assets/basketball.jpg')} />
+          {(event === undefined || event.length == 0) && <Text style={styles.text}>No Coming Event</Text>}
+          {event && event.map((item, index) => {
+            if (new Date(item.end_time) > new Date()) {
+              return <EventsFilter
+                key={item.match_id}
+                item={item}
+                navigation={navigator}
+                imageSource={require('../../../assets/football.jpg')}
+                onViewInfo={() => {
+                  navigation.navigate('EventInfo', {
+                    information: item
+                  })
+                }}
+                onDelete={handleUnjoin} />
+            }
+          })}
       </ScrollView>
     </View>
   )

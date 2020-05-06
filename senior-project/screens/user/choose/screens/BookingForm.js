@@ -16,6 +16,8 @@ const BookingForm = ({navigation,props}) => {
   var type = state.params ? state.params.type : "<undefined>";
   var width = state.params ? state.params.width : "<undefined>";
   var length = state.params ? state.params.length : "<undefined>";
+  var name = state.params ? state.params.name : "<undefined>";
+
 
 const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -42,21 +44,50 @@ const [isTimePickerVisible2, setTimePickerVisibility2] = useState(false);
    setTimePickerVisibility2(false);
  };
 
+
+
  const dateConfirmHandler = date => {
-   console.log(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate())
-   setDate(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
+     var month = '' + (date.getMonth() + 1)
+     var day = '' + date.getDate()
+     var year = date.getFullYear()
+
+     if (month.length < 2)
+     {
+       month = '0' + month;
+     }
+     if (day.length < 2){
+        day = '0' + day;
+     }
+   console.log(year + '-' + month + '-' + day)
+   setDate(year + '-' + month + '-' + day);
    hideDatePicker();
  };
 
 const timeConfirmHandler = time => {
-   console.log(time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds());
-   setbookTime(time.getHours() + ':' + time.getMinutes());
+  var hours = '' + time.getHours()
+  var minutes = '' + time.getMinutes()
+  if (hours.length < 2){
+    hours = '0' + hours;
+  }
+  if (minutes.length < 2){
+    minutes = '0' + minutes;
+  }
+   console.log(hours + ':' + minutes);
+   setbookTime(hours + ':' + minutes);
    hideTimePicker();
  };
 
 const timeConfirmHandler2 = time => {
-    console.log(time.getHours() + ':' + time.getMinutes() );
-    setEndTime(time.getHours() + ':' + (time.getMinutes()) );
+  var hours = '' + time.getHours()
+  var minutes = '' + time.getMinutes()
+  if (hours.length < 2){
+    hours = '0' + hours;
+  }
+  if (minutes.length < 2){
+    minutes = '0' + minutes;
+  }
+    console.log(hours + ':' + minutes);
+    setEndTime(hours + ':' + minutes);
     hideTimePicker2();
 };
 
@@ -106,7 +137,8 @@ const handleSubmit = () => {
        start_time,
        end_time,
        player,
-       description
+       description,
+       name
      })
   }
 
@@ -151,6 +183,7 @@ const handleSubmit = () => {
      <View style= {styles.titleContainer2}>
      <TouchableOpacity title = "pick the date" onPress={showDatePicker} >
       <DateTimePickerModal
+
         isVisible={isDatePickerVisible}
         mode="date"
         minimumDate={new Date(new Date().getFullYear(), new Date().getMonth(),new Date().getDate())}
@@ -162,6 +195,7 @@ const handleSubmit = () => {
         onConfirm={dateConfirmHandler}
         onCancel={hideDatePicker}
         date={new Date()}
+
       />
       <View style={styles.titleContainer}>
       <AntDesign name='calendar' size={25} color='#d63447'/>
@@ -284,7 +318,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderWidth: 1,
     borderColor: 'black',
-    marginBottom:15,
     padding:5,
     margin: 5,
     height: 100,
@@ -365,7 +398,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 2,
     alignSelf: 'center',
-    margin:10,
+    margin:5,
     backgroundColor: '#FFA64B',
     borderColor: 'white'
   },

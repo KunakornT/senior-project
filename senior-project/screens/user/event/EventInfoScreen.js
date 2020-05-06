@@ -144,7 +144,7 @@ console.log(props);
           "username": username
         });
         try {
-          fetch('http://senior-project-server.herokuapp.com/match',{
+          fetch('https://senior-project-server.herokuapp.com/match',{
             method: 'DELETE',
             headers: {
               Accept: 'application/json',
@@ -206,10 +206,6 @@ console.log(props);
           {username !== reserveUser &&
           <TouchableOpacity style = {styles.button} onPress = {confirmAlert}>
           <Text style = {styles.textButton}> Join </Text>
-          </TouchableOpacity>}
-          {username == reserveUser &&
-          <TouchableOpacity style = {styles.button} onPress = {confirmAlert2}>
-          <Text style = {styles.textButton}> Cancel </Text>
           </TouchableOpacity>}
         </ScrollView>}
     </View>

@@ -8,6 +8,7 @@ const SubField = ({navigation}) => {
   const [subField, setSubField] = useState('');
   var id = state.params ? state.params.id : "<undefined>";
   var type = state.params ? state.params.type : "<undefined>";
+  var name = state.params ? state.params.name : "<undefined>";
 
 
 useEffect(() => {
@@ -56,6 +57,7 @@ useEffect(() => {
         sportID: item.sport_field_id,
         id: item.sub_field_id,
         type,
+        name,
         width: item.width,
         length: item.length,
         service: item.service_rate,
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
   },
   Image: {
     height: 225,
-    width:350,
+    width: 320,
     resizeMode: 'stretch',
     borderRadius: 50,
     marginLeft: 20,
@@ -128,8 +130,8 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 1,
     flex: 1,
-    margin: 15
-
+    margin: 15,
+    borderRadius: 15
   }
 });
 

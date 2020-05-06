@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, AsyncStorage, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, AsyncStorage, FlatList,RefreshControl } from 'react-native';
 import SportsFilter from '../../../../components/SportsFilter';
 import EventsFilter from '../../../../components/EventsFilter';
 
@@ -12,6 +12,19 @@ const AllEvents = ({props,navigation}) => {
   const [matchId, setMatchId] = useState();
   const [event, setEvent] = useState();
   const [username, setUsername] = useState();
+  const [refreshing, setRefreshing] = useState(false);
+
+  function wait(timeout) {
+    return new Promise(resolve => {
+      setTimeout(resolve, timeout);
+    });
+  }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchEvent();
+    wait(2000).then(() => setRefreshing(false));
+  }, [refreshing]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -28,7 +41,7 @@ const AllEvents = ({props,navigation}) => {
 
   const fetchEvent = async () => {
     try {
-      const response = await fetch(`http://senior-project-server.herokuapp.com/match`);
+      const response = await fetch(url.url_match);
       const responseJson = await response.json();
       setEvent(responseJson);
       // console.log(responseJson);
@@ -47,7 +60,8 @@ console.log(matchId);
   }
 
   return <View>
-  <ScrollView>
+  <ScrollView
+  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
     <Text style={styles.headText}> All Events </Text>
     {(event === undefined || event.length == 0) && <Text style={styles.text}>No Coming Event</Text>}
     {event && event.map((item, index) => {
@@ -84,13 +98,12 @@ const styles = StyleSheet.create({
     margin: 10,
     fontWeight: 'bold',
     alignSelf: 'center'
-  },  headText: {
+  },headText: {
       fontSize: 25,
       fontWeight: 'bold',
       alignSelf: 'center',
       marginTop: 15,
-      marginBottom: 10
-    },
+    }
 });
 
 export default AllEvents;

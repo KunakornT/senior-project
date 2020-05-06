@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, TouchableOpacity, AsyncStorage, Alert } from 'react-native';
+import url from '../../../../constants/url-constant';
 
 const ConfirmBooking = ({ navigation, props }) => {
   const { state } = navigation;
@@ -53,7 +54,7 @@ const ConfirmBooking = ({ navigation, props }) => {
     });
     console.log(data)
     try {
-      const response = await fetch('http://senior-project-server.herokuapp.com/match', {
+      const response = await fetch(url.url_match, {
         method: 'POST',
         headers: {
           Accept: 'application/json',

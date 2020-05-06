@@ -32,7 +32,8 @@ const SportsField = ({navigation}) => {
   </TouchableOpacity>
   <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('Sub',{
     id,
-    type
+    type,
+    name
   })}>
   <Text style = {styles.textButton}> Next </Text>
   </TouchableOpacity>
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   },
   Image: {
     height: 225,
-    width:380,
+    width:350,
     resizeMode: 'stretch',
     borderRadius: 50,
     marginLeft: 20,

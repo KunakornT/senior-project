@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   card: {
     padding: 0,
     minHeight: Platform.OS == 'ios' ? 220 : 230,
-    height: Platform.OS == 'ios' ? Dimensions.get('window').height / 4 : Dimensions.get('window').height / 3,
+    height: Platform.OS == 'ios' ? Dimensions.get('window').height / 3.5 : Dimensions.get('window').height / 3,
     width: '90%'
   },
   imageContainer: {
