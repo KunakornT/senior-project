@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions,AsyncStorage,Alert } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions, AsyncStorage, Alert } from 'react-native'
 
 import url from '../../../constants/url-constant'
 
@@ -16,9 +16,9 @@ const EventInfoScreen = (props) => {
   const [numberPlayer, setNumberPlayer] = useState('');
   const [maxPlayer, setMaxPlayer] = useState('');
   const [player, setPlayer] = useState();
-  const [description,setDescription] = useState('');
-  const [reserveUser,setReserveUser] = useState('');
-  const [count,setCount] = useState(0);
+  const [description, setDescription] = useState('');
+  const [reserveUser, setReserveUser] = useState('');
+  const [count, setCount] = useState(0);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -52,110 +52,109 @@ const EventInfoScreen = (props) => {
       }
     }
     const info = props.navigation.getParam('information');
+    console.log(info)
     fetchSportField(info.match_id);
   }, [matchId])
 
+  function confirmAlert() {
+    Alert.alert(
+      'Join Match',
+      'Do you want to join the match',
+      [
+        { text: 'Yes', onPress: () => joinMatch() },
+        { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+      ],
+      { cancelable: false }
+    )
+    // setCount(count+1);
+    // console.log(count);
+    // else{
+    //   Alert.alert(
+    //     'You have already joined',
+    //     'You have joined this event, please check the information of the match',
+    //     { cancelable: false }
+    //   )
+    // }
+  }
 
-console.log(props);
-    function confirmAlert() {
-        Alert.alert(
-          'Join Match',
-          'Do you want to join the match',
-          [
-            { text: 'Yes', onPress: () => joinMatch() },
-            { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-          ],
-          { cancelable: false }
-        )
-        // setCount(count+1);
-        // console.log(count);
-      // else{
-      //   Alert.alert(
-      //     'You have already joined',
-      //     'You have joined this event, please check the information of the match',
-      //     { cancelable: false }
-      //   )
-      // }
-    }
-
-    async function joinMatch() {
-      const info = props.navigation.getParam('information');
-      setMatchId(info.match_id);
-      console.log(matchId);
-      console.log(userId);
-      const data = JSON.stringify({
-        "matchId": matchId,
-        "userId": userId
+  async function joinMatch() {
+    const info = props.navigation.getParam('information');
+    setMatchId(info.match_id);
+    console.log(matchId);
+    console.log(userId);
+    const data = JSON.stringify({
+      "matchId": matchId,
+      "userId": userId
+    });
+    try {
+      const res = await fetch(url.url_match_user, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: data,
       });
-      try {
-        const res = await fetch(url.url_match_user, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: data,
-        });
-        const resData = await res.json()
-      if(!res.ok) {
+      const resData = await res.json()
+      if (!res.ok) {
         Alert.alert(
           'Error',
           resData.message,
           [
-           { text: "OK", onPress: () => console.log("OK Pressed") }
+            { text: "OK", onPress: () => console.log("OK Pressed") }
           ],
           { cancelable: false }
         )
       }
       else {
         props.navigation.navigate('Home',
-        Alert.alert(
-          'Success',
-          'You are now joined the event, check information on Event page',
-          [
-           { text: "OK", onPress: () => console.log("OK Pressed") }
-          ],
-          { cancelable: false }
-        ));
+          Alert.alert(
+            'Success',
+            'You are now joined the event, check information on Event page',
+            [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+          ));
       }
-      } catch (e) {
-        console.log(e)
-      }
+    } catch (e) {
+      console.log(e)
     }
+  }
 
 
-      function confirmAlert2() {
-        Alert.alert(
-          'Cancel Event',
-          'Do you want to cancel this event',
-          [
-            { text: 'Yes', onPress: () => deleteMatch() },
-            { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-          ],
-          { cancelable: false }
-        )
-      }
+  function confirmAlert2() {
+    Alert.alert(
+      'Cancel Event',
+      'Do you want to cancel this event',
+      [
+        { text: 'Yes', onPress: () => deleteMatch() },
+        { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+      ],
+      { cancelable: false }
+    )
+  }
 
-      function deleteMatch() {
-        const info = props.navigation.getParam('information');
-        setMatchId(info.match_id);
-        const data = JSON.stringify({
-          "matchId": matchId,
-          "username": username
-        });
-        try {
-          fetch('https://senior-project-server.herokuapp.com/match',{
-            method: 'DELETE',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: data,
-          });
-        } catch (e) {
-          console.log(e)
-        }
-        }
+  function deleteMatch() {
+    const info = props.navigation.getParam('information');
+    setMatchId(info.match_id);
+    const data = JSON.stringify({
+      "matchId": matchId,
+      "username": username
+    });
+    try {
+      fetch('https://senior-project-server.herokuapp.com/match', {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: data,
+      });
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   useEffect(() => {
     const info = props.navigation.getParam('information');
@@ -203,10 +202,18 @@ console.log(props);
               )
             })}
           </View>
-          {username !== reserveUser &&
-          <TouchableOpacity style = {styles.button} onPress = {confirmAlert}>
-          <Text style = {styles.textButton}> Join </Text>
-          </TouchableOpacity>}
+          {(username === reserveUser) &&
+            <TouchableOpacity style={styles.button} onPress={confirmAlert2}>
+              <Text style={styles.textButton}> Cancel </Text>
+            </TouchableOpacity>}
+          {(player.some(user => user.username === username) && username !== reserveUser) &&
+            <TouchableOpacity style={styles.button} onPress={confirmAlert}>
+              <Text style={styles.textButton}> Unjoin </Text>
+            </TouchableOpacity>}
+          {(!player.some(user => user.username === username)) &&
+            <TouchableOpacity style={styles.button} onPress={confirmAlert}>
+              <Text style={styles.textButton}> Join </Text>
+            </TouchableOpacity>}
         </ScrollView>}
     </View>
   )
@@ -250,17 +257,17 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-  },textButton:{
+  }, textButton: {
     fontSize: 20,
     color: 'white',
     alignSelf: 'center',
     padding: 10
   },
-  button:{
+  button: {
     borderRadius: 50,
     borderWidth: 2,
     alignSelf: 'center',
-    margin:10,
+    margin: 10,
     backgroundColor: '#FFA64B',
     borderColor: 'white'
   },
