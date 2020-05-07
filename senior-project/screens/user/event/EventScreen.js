@@ -38,7 +38,7 @@ const EventScreen = (props) => {
       const response = await fetch(url.url_user_event + '/' + userId);
       const responseJson = await response.json();
       setEvent(responseJson);
-      console.log(responseJson);
+      // console.log(responseJson);
     } catch (e) {
     }
   }
@@ -81,7 +81,8 @@ const EventScreen = (props) => {
       <Text style={styles.textStyle2}> Coming Events </Text>
       {(event === undefined || event.length == 0) && <Text style={styles.text}>No Coming Event</Text>}
       {event && event.map((item, index) => {
-        if (new Date(item.end_time) > new Date()) {
+        console.log('coming',item)
+        // if (new Date(item.end_time) > new Date()) {
           return <ComingSports
             key={item.match_id}
             item={item}
@@ -94,13 +95,15 @@ const EventScreen = (props) => {
             }}
             onDelete={handleUnjoin} />
         }
-      })}
+      // }
+      )}
       {/* <ComingSports title="Futsal Park RAMA II"
         imageSource={require('../../../assets/football.jpg')} /> */}
       <Text style={styles.textStyle2}> History </Text>
       {(historyEvent === undefined || historyEvent.length == 0) && <Text style={styles.text}>No History Event</Text>}
       {historyEvent && historyEvent.map((item, index) => {
-        if (new Date(item.end_time) < new Date()) {
+        console.log('history',item)
+        // if (new Date(item.end_time) < new Date()) {
           return <HistorySports
             key={item.match_id}
             item={item}
@@ -111,7 +114,7 @@ const EventScreen = (props) => {
                 information: item
               })
             }} />
-        }
+        // }
       })}
       {/* <HistorySports title="Futsal Park RAMA II"
         imageSource={require('../../../assets/football.jpg')} />

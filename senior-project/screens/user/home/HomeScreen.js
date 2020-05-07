@@ -13,7 +13,7 @@ const HomeScreen = ({ navigation }) => {
 
   const [username, setUsername] = useState(null);
   const [spinner, setSpinner] = useState(true);
-    const [event, setEvent] = useState();
+  const [event, setEvent] = useState();
 
   async function fetchProfilePic(id) {
     try {
@@ -45,7 +45,7 @@ const HomeScreen = ({ navigation }) => {
 
   const fetchEvent = async () => {
     try {
-      const response = await fetch(url.url_match);
+      const response = await fetch(url.url_coming_match);
       const responseJson = await response.json();
       setEvent(responseJson);
       // console.log(responseJson);
@@ -78,7 +78,7 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.headText}>  Events  </Text>
           {(event === undefined || event.length == 0) && <Text style={styles.text}>No Coming Event</Text>}
           {event && event.map((item, index) => {
-            if (new Date(item.end_time) > new Date()) {
+            // if (new Date(item.end_time) > new Date()) {
               return <EventsFilter
                 key={item.match_id}
                 item={item}
@@ -90,7 +90,7 @@ const HomeScreen = ({ navigation }) => {
                   })
                 }}
                 onDelete={handleUnjoin} />
-            }
+            // }
           })}
       </ScrollView>
     </View>

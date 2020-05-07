@@ -74,13 +74,13 @@ const EventsFilter = (props) => {
     )
   }
 
-  function deleteMatch() {
+  async function deleteMatch() {
     const data = JSON.stringify({
       "matchId": props.item.match_id,
       "username": username
     });
     try {
-      fetch('http://senior-project-server.herokuapp.com/match',{
+      const res = await fetch('http://senior-project-server.herokuapp.com/match',{
         method: 'DELETE',
         headers: {
           Accept: 'application/json',
@@ -88,10 +88,29 @@ const EventsFilter = (props) => {
         },
         body: data,
       });
+      const message = await res.json();
+      if(!res.ok) {
+        Alert.alert(
+          'Error',
+          message.message,
+          [
+            { text: 'Yes'},
+          ],
+        )
+      }
+      else {
+        props.onDelete(props.item.match_id)
+        Alert.alert(
+          'Success',
+          message.message,
+          [
+            { text: 'Yes'},
+          ],
+        )
+      }
     } catch (e) {
       console.log(e)
     }
-    props.onDelete(props.item.match_id)
   }
 
   const date = new Date(props.item.start_time).getUTCDate();
