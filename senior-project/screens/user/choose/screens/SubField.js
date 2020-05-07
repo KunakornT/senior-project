@@ -63,7 +63,7 @@ useEffect(() => {
         service: item.service_rate,
         holiday: item.holiday_service_rate
       })} >
-      <Text style = {styles.textButton}> Next </Text>
+      <Text style = {styles.textButton}> Select </Text>
       </TouchableOpacity>
         </View>
         </ScrollView>

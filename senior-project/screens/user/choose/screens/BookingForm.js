@@ -291,7 +291,7 @@ const handleSubmit = () => {
     value={description}
     onChangeText={text => setDescription(text)}/>
     <TouchableOpacity style = {styles.button} onPress = {handleSubmit}>
-    <Text style = {styles.textButton}> Next </Text>
+    <Text style = {styles.textButton}> Book </Text>
     </TouchableOpacity>
 
   </ScrollView>

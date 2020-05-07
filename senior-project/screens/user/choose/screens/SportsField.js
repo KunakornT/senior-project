@@ -35,7 +35,7 @@ const SportsField = ({navigation}) => {
     type,
     name
   })}>
-  <Text style = {styles.textButton}> Next </Text>
+  <Text style = {styles.textButton}> Select </Text>
   </TouchableOpacity>
   </View>
   </View>

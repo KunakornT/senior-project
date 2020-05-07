@@ -77,7 +77,7 @@ console.log(term);
           openTime: item.open_time,
           closeTime: item.close_time
         })} >
-      <Text style = {styles.textButton}> Next </Text>
+      <Text style = {styles.textButton}> Select </Text>
       </TouchableOpacity>
         </View>
         </ScrollView>
