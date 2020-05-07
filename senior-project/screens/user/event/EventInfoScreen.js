@@ -7,7 +7,6 @@ const EventInfoScreen = (props) => {
 
   const [username, setUsername] = useState();
   const [userId, setUserId] = useState();
-
   const [sportFieldName, setSportFieldName] = useState('sport field name');
   const [matchId, setMatchId] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -19,6 +18,8 @@ const EventInfoScreen = (props) => {
   const [description, setDescription] = useState('');
   const [reserveUser, setReserveUser] = useState('');
   const [count, setCount] = useState(0);
+  const [event, setEvent] = useState();
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -151,6 +152,55 @@ const EventInfoScreen = (props) => {
         },
         body: data,
       });
+      props.navigation.navigate('Home',
+        Alert.alert(
+          'Canceled the match',
+          'You have canceled the match',
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ],
+          { cancelable: false }
+        ));
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  function confirmAlert3() {
+    Alert.alert(
+      'Unjoin event',
+      'Do you want to unjoin an event',
+      [
+        { text: 'Confirm', onPress: () => unJoinMatch() },
+        { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+      ],
+      { cancelable: false }
+    )
+  }
+
+  function unJoinMatch() {
+    const data = JSON.stringify({
+      "matchId": matchId,
+      "userId": userId
+    });
+    try {
+      fetch(url.url_unjoin, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: data,
+      });
+      props.navigation.navigate('Home',
+        Alert.alert(
+          'Unjoined',
+          'You have unjoined the event',
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ],
+          { cancelable: false }
+        ));
     } catch (e) {
       console.log(e)
     }
@@ -207,7 +257,7 @@ const EventInfoScreen = (props) => {
               <Text style={styles.textButton}> Cancel </Text>
             </TouchableOpacity>}
           {(player.some(user => user.username === username) && username !== reserveUser) &&
-            <TouchableOpacity style={styles.button} onPress={confirmAlert}>
+            <TouchableOpacity style={styles.button} onPress={confirmAlert3}>
               <Text style={styles.textButton}> Unjoin </Text>
             </TouchableOpacity>}
           {(!player.some(user => user.username === username)) &&

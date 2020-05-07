@@ -42,6 +42,7 @@ const EventScreen = (props) => {
     } catch (e) {
     }
   }
+
   useEffect(() => {
     fetchEvent();
   }, [userId])
