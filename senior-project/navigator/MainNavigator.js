@@ -101,14 +101,14 @@ const MainTabNavigation = createBottomTabNavigator({
       },
     }
   },
-  Notification: {
-    screen: NotificationStackNavigation,
-    navigationOptions: {
-      tabBarIcon: (tabInfo) => {
-        return <Ionicons name='md-notifications' size={25} color={tabInfo.tintColor} />
-      },
-    }
-  },
+  // Notification: {
+  //   screen: NotificationStackNavigation,
+  //   navigationOptions: {
+  //     tabBarIcon: (tabInfo) => {
+  //       return <Ionicons name='md-notifications' size={25} color={tabInfo.tintColor} />
+  //     },
+  //   }
+  // },
   Profile: {
     screen: ProfileStackNavigation,
     navigationOptions: {
