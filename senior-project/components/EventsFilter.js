@@ -138,9 +138,9 @@ const EventsFilter = (props) => {
             <TouchableOpacity style={styles.buttonInfo} onPress={props.onViewInfo}>
               <Text style={styles.textButton}> Information </Text>
             </TouchableOpacity>
-            {username === props.item.reserve_user && <TouchableOpacity style={styles.buttonCancel} onPress={confirmAlert2}>
+            {/* {username === props.item.reserve_user && <TouchableOpacity style={styles.buttonCancel} onPress={confirmAlert2}>
               <Text style={styles.textButton}> Cancel </Text>
-            </TouchableOpacity>}
+            </TouchableOpacity>} */}
           </View>
         </ImageBackground>
       </View>
