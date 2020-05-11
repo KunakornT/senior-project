@@ -11,6 +11,7 @@ import url from '../../../constants/url-constant';
 const EventScreen = (props) => {
 
   const [userId, setUserId] = useState();
+  const [username, setUsername] = useState();
   const [event, setEvent] = useState();
   const [historyEvent, setHistoryEvent] = useState();
   const [refreshing, setRefreshing] = useState(false);
@@ -27,6 +28,7 @@ const EventScreen = (props) => {
         let data = await AsyncStorage.getItem('userInfo');
         let user = await JSON.parse(data);
         setUserId(user.user_id);
+        setUsername(user.username);
       } catch (e) {
       }
     }
@@ -76,14 +78,14 @@ const EventScreen = (props) => {
   // console.log(dt)
   return <View>
     <ScrollView
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <Text style={styles.textStyle}> Your Events </Text>
       <SportsFilter />
-      <Text style={styles.textStyle2}> Coming Events </Text>
+      <Text style={styles.textStyle2}> Own Reservations </Text>
       {(event === undefined || event.length == 0) && <Text style={styles.text}>No Coming Event</Text>}
       {event && event.map((item, index) => {
-        console.log('coming',item)
-        // if (new Date(item.end_time) > new Date()) {
+        console.log('coming', item)
+        if (item.reserve_user == username) {
           return <ComingSports
             key={item.match_id}
             item={item}
@@ -96,16 +98,15 @@ const EventScreen = (props) => {
             }}
             onDelete={handleUnjoin} />
         }
-      // }
+      }
       )}
-      {/* <ComingSports title="Futsal Park RAMA II"
-        imageSource={require('../../../assets/football.jpg')} /> */}
-      <Text style={styles.textStyle2}> History </Text>
-      {(historyEvent === undefined || historyEvent.length == 0) && <Text style={styles.text}>No History Event</Text>}
-      {historyEvent && historyEvent.map((item, index) => {
-        console.log('history',item)
-        // if (new Date(item.end_time) < new Date()) {
-          return <HistorySports
+      {/* join match */}
+      <Text style={styles.textStyle2}> Join Events </Text>
+      {(event === undefined || event.length == 0) && <Text style={styles.text}>No Coming Event</Text>}
+      {event && event.map((item, index) => {
+        console.log('coming', item)
+        if (item.reserve_user != username) {
+          return <ComingSports
             key={item.match_id}
             item={item}
             navigation={navigator}
@@ -114,7 +115,28 @@ const EventScreen = (props) => {
               props.navigation.navigate('Information', {
                 information: item
               })
-            }} />
+            }}
+            onDelete={handleUnjoin} />
+        }
+      }
+      )}
+      {/* <ComingSports title="Futsal Park RAMA II"
+        imageSource={require('../../../assets/football.jpg')} /> */}
+      <Text style={styles.textStyle2}> Past Event </Text>
+      {(historyEvent === undefined || historyEvent.length == 0) && <Text style={styles.text}>No History Event</Text>}
+      {historyEvent && historyEvent.map((item, index) => {
+        console.log('history', item)
+        // if (new Date(item.end_time) < new Date()) {
+        return <HistorySports
+          key={item.match_id}
+          item={item}
+          navigation={navigator}
+          imageSource={require('../../../assets/football.jpg')}
+          onViewInfo={() => {
+            props.navigation.navigate('Information', {
+              information: item
+            })
+          }} />
         // }
       })}
       {/* <HistorySports title="Futsal Park RAMA II"
