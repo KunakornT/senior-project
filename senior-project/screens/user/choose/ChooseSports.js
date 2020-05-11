@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Text, View, ScrollView,StyleSheet, Dimensions, Button, ActivityIndicator, Image, TextInput, Alert, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker, Permission, AnimatedRegion, Animated  } from 'react-native-maps';
+import { Text, View, ScrollView, StyleSheet, Dimensions, Button, ActivityIndicator, Image, TextInput, Alert, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, Marker, Permission, AnimatedRegion, Animated } from 'react-native-maps';
 import { requestPermissionsAsync, watchPositionAsync, Accuracy } from 'expo-location';
 //import '../../_mockLocation';
 import { Context as LocationContext } from '../../../context/LocationContext';
@@ -18,7 +18,9 @@ const ChooseSports = ({ navigation }) => {
   const [err, setErr] = useState(null);
   const [sportField, setSportField] = useState(null);
   const [username, setUsername] = useState(null);
-  const [image, setImage] = useState('')
+  const [image, setImage] = useState('');
+  const [isGoogle, setIsGoogle] = useState(null);
+  const [isFacebook, setIsFacebook] = useState(null);
 
   const startWatching = async () => {
     try {
@@ -44,6 +46,8 @@ const ChooseSports = ({ navigation }) => {
       let userPic = await JSON.parse(pic);
       setUsername(user.username);
       setImage(userPic.profile_picture);
+      setIsGoogle(user.google_signin);
+      setIsFacebook(user.facebook_signin);
     }
     const fetchSportField = async () => {
       const response = await fetch(url.url_sportsfield, {
@@ -65,11 +69,11 @@ const ChooseSports = ({ navigation }) => {
     fetchSportField();
     fetchUsername();
     const listener = navigation.addListener('didFocus', () => {
-       fetchSportField();
-     });
+      fetchSportField();
+    });
     return () => {
-       listener.remove();
-     };
+      listener.remove();
+    };
   }, []);
 
   const { state: { currentLocation } } = useContext(LocationContext);
@@ -78,7 +82,7 @@ const ChooseSports = ({ navigation }) => {
   }
   return (
     <View style={styles.container}>
-      <Text style = {styles.normalText}>Click on a ball to select nearby field</Text>
+      <Text style={styles.normalText}>Click on a ball to select nearby field</Text>
       <MapView style={styles.mapStyle}
         provider={PROVIDER_GOOGLE}
         showUserLocation={true}
@@ -91,47 +95,58 @@ const ChooseSports = ({ navigation }) => {
           ...currentLocation.coords,
           latitudeDelta: 0.005,
           longitudeDelta: 0.005
-       }}
+        }}
       >
         {(sportField !== null) && sportField.map(field => (
           <Marker
             key={field.sport_field_id}
             title={field.sport_field_name}
             description={field.description}
-            onPress= {() => navigation.navigate('Field',{
-                id: field.sport_field_id,
-                description: field.description,
-                name: field.sport_field_name,
-                type: field.sport_type,
-                openTime: field.open_time,
-                closeTime: field.close_time
-              })}
+            onPress={() => navigation.navigate('Field', {
+              id: field.sport_field_id,
+              description: field.description,
+              name: field.sport_field_name,
+              type: field.sport_type,
+              openTime: field.open_time,
+              closeTime: field.close_time
+            })}
 
             coordinate={{
               latitude: field.latitude,
               longitude: field.longtitude
             }}>
-              <Image style={styles.imageContainer} source={require('../../../assets/football.png')} />
+            <Image style={styles.imageContainer} source={require('../../../assets/football.png')} />
           </Marker>
         ))}
         <Marker
           coordinate={currentLocation.coords}>
-          <Image
+          {/* <Image
             style={styles.imageContainer}
             defaultSource={require('../../../assets/profile.jpeg')}
             // source={{ uri: url.url_users_fetch_picture + '/' + username + '.jpeg'}}
             source={{ uri: 'data:image/png;base64,'+image}}
-          />
+          /> */}
+          {(isGoogle === null) && (isFacebook === null) && 
+            <Image style={styles.imageContainer}
+              // source={{ uri: imageUrl + '?' + new Date()}}
+              source={{ uri: 'data:image/png;base64,' + image }}
+              defaultSource={require('../../../assets/profile.jpeg')}
+            />}
+          {((isGoogle) || (isFacebook)) &&
+            <Image style={styles.imageContainer}
+              source={{ uri: image }}
+              defaultSource={require('../../../assets/profile.jpeg')}
+            />}
         </Marker>
       </MapView>
-      <View style= {styles.titleContainer2}>
-      <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('AllFields')}>
-      <Text style = {styles.textButton}> All Fields </Text>
-      </TouchableOpacity>
+      <View style={styles.titleContainer2}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AllFields')}>
+          <Text style={styles.textButton}> All Fields </Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style = {styles.button} onPress = {()=> navigation.navigate('AllEvents')}>
-      <Text style = {styles.textButton}> All Events </Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AllEvents')}>
+          <Text style={styles.textButton}> All Events </Text>
+        </TouchableOpacity>
 
       </View>
     </View>);
@@ -184,7 +199,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     borderColor: 'orange'
   },
-    normalText:{
+  normalText: {
     fontSize: 20,
     fontWeight: 'bold',
     alignSelf: 'center',
@@ -192,25 +207,25 @@ const styles = StyleSheet.create({
     color: 'black',
     margin: 10,
   },
-    button:{
-      borderRadius: 50,
-      borderWidth: 2,
-      margin:5,
-      backgroundColor: '#FFA64B',
-      borderColor: 'white'
-    },
-    textButton:{
-      fontSize: 20,
-      color: 'white',
-      alignSelf: 'center',
-      padding: 10,
-    },
-    titleContainer2: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      margin: 5,
-      alignSelf: 'center'
-    },
+  button: {
+    borderRadius: 50,
+    borderWidth: 2,
+    margin: 5,
+    backgroundColor: '#FFA64B',
+    borderColor: 'white'
+  },
+  textButton: {
+    fontSize: 20,
+    color: 'white',
+    alignSelf: 'center',
+    padding: 10,
+  },
+  titleContainer2: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 5,
+    alignSelf: 'center'
+  },
 });
 
 export default ChooseSports;

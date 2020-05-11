@@ -47,6 +47,7 @@ const EventInfoScreen = (props) => {
           method: 'GET'
         });
         const data = await response.json();
+        console.log(data)
         setPlayer(data);
       } catch (e) {
         console.log(e)
@@ -237,19 +238,38 @@ const EventInfoScreen = (props) => {
         <ScrollView>
           <View style={styles.memberContainer}>
             {player.map((item, index) => {
-              return (
-                <View key={item.user_id}>
-                  <View style={styles.pictureWrapper}>
-                    <TouchableOpacity>
-                      <Image style={styles.image}
-                        source={{ uri: 'data:image/png;base64,' + item.profile_picture }}
-                        defaultSource={require('../../../assets/profile.jpeg')}
-                      />
-                    </TouchableOpacity>
+              if (item.facebook_signin === null && item.google_signin === null) {
+                console.log('general'+item.username)
+                return (
+                  <View key={item.user_id}>
+                    <View style={styles.pictureWrapper}>
+                      <TouchableOpacity>
+                        <Image style={styles.image}
+                          source={{ uri: 'data:image/png;base64,' + item.profile_picture }}
+                          defaultSource={require('../../../assets/profile.jpeg')}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <Text style={styles.usernameText}>{item.username}</Text>
                   </View>
-                  <Text style={styles.usernameText}>{item.username}</Text>
-                </View>
-              )
+                )
+              }
+              else {
+                console.log('face or goo'+item.username)
+                return (
+                  <View key={item.user_id}>
+                    <View style={styles.pictureWrapper}>
+                      <TouchableOpacity>
+                        <Image style={styles.image}
+                          source={{ uri: item.profile_picture }}
+                          defaultSource={require('../../../assets/profile.jpeg')}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <Text style={styles.usernameText}>{item.username}</Text>
+                  </View>
+                )
+              }
             })}
           </View>
           {(username === reserveUser) &&
