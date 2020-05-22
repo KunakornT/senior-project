@@ -121,8 +121,10 @@ const styles = StyleSheet.create({
     marginTop: 15,
     flexDirection: 'row',
     justifyContent: 'space-between'
-
-
+  },
+  text: {
+    fontSize: 18,
+    textAlign: 'center'
   }
 });
 
